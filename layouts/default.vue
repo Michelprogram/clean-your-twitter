@@ -1,15 +1,15 @@
 <template>
   <div>
-    <p>Layout</p>
+    <Header />
+    <p>testtt</p>
     <slot />
+    <Footer />
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import Header from "@/Components/header.vue";
+import Footer from "@/Components/footer.vue";
+</script>
 
-<style lang="scss" scoped>
-@import "@/assets/colors";
-p {
-  color: $red;
-}
-</style>
+<style lang="scss" scoped></style>

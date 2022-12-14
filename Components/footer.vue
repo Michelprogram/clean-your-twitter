@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <div>ouioui</div>
 </template>
 
 <script setup></script>
