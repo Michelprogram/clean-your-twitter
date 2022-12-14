@@ -7,7 +7,6 @@
           alt="clean your twitter logo"
           class="icon-app"
         />
-        <NuxtLink to="/">Clean your twitter</NuxtLink>
       </div>
       <div class="menu">
         <NuxtLink to="/">Clean your twitter</NuxtLink>
@@ -25,7 +24,7 @@
 import Button from "@/Components/button.vue";
 
 const login = (): void => {
-  this.$router.push({ path: "/login" });
+  useRouter().push("/login");
 };
 </script>
 
@@ -41,7 +40,7 @@ $size-center: 20%;
   align-items: center;
 
   margin: auto;
-  padding: 1em;
+  padding: 1.5em 1em;
 
   width: $size-width;
   color: $main;
@@ -108,7 +107,8 @@ $size-center: 20%;
 }
 
 hr {
-  margin: auto;
+  margin-left: 5%;
+  margin-bottom: 5em;
   height: 1px;
 
   border: 0px;

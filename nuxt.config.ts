@@ -11,4 +11,10 @@ export default defineNuxtConfig({
       },
     },
   },
+  app: {
+    head: {
+      title: "Clean your twitter",
+      link: [{ rel: "icon", type: "image/x-icon", href: "/icon.ico" }],
+    },
+  },
 });

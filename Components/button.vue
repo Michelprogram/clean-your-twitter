@@ -30,7 +30,6 @@ const styleClass = computed((): String => {
   text-align: center;
   p {
     padding: 0.3em 1em;
-    color: $main;
   }
   &.fill {
     background-color: $main;
@@ -38,6 +37,7 @@ const styleClass = computed((): String => {
   }
 
   &.outline {
+    color: $main;
     border: 1.5px solid $main;
   }
 }
