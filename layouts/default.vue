@@ -1,15 +1,13 @@
 <template>
   <div>
     <Header />
-    <Home />
-    <Footer />
+    <Clean />
   </div>
 </template>
 
 <script setup>
 import Header from "@/Components/header.vue";
-import Footer from "@/Components/footer.vue";
-import Home from "@/Pages/index.vue";
+import Clean from "@/Pages/clean.vue";
 </script>
 
 <style lang="scss" scoped></style>

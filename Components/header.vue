@@ -108,7 +108,7 @@ $size-center: 20%;
 
 hr {
   margin-left: 5%;
-  margin-bottom: 5em;
+  margin-bottom: 2em;
   height: 1px;
 
   border: 0px;

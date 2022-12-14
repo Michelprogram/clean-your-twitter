@@ -27,19 +27,19 @@
       />
       <img
         class="element-next-img img-1"
-        src="/images/svg/curve.svg"
+        src="/images/svg/shapes/curve.svg"
         alt="funky-icon"
         srcset=""
       />
       <img
         class="element-next-img img-2"
-        src="/images/svg/pill.svg"
+        src="/images/svg/shapes/pill.svg"
         alt="funky-icon"
         srcset=""
       />
       <img
         class="element-next-img img-3"
-        src="/images/svg/triangle.svg"
+        src="/images/svg/shapes/triangle.svg"
         alt="funky-icon"
         srcset=""
       />
@@ -56,7 +56,7 @@ const router = useRouter();
 
 <style lang="scss" scoped>
 @forward "@/assets/scss/variables/fonts";
-@import "@/assets/scss/colors.scss";
+@forward "@/assets/scss/variables/colors";
 
 .home-container {
   display: grid;
