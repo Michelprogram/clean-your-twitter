@@ -7,7 +7,7 @@
           <Input title="From" data="" />
           <Input title="To" data="" />
         </div>
-        <p class="title">Suggestions</p>
+        <p class="sub-title">Suggestions</p>
         <div class="info">
           <p class="suggestion">
             Most of your tweets are behind <span id="start"></span> and
@@ -28,9 +28,33 @@
         </div>
 
         <div class="content">
-          <div class="waiting">
+          <div v-if="!finded" class="waiting">
             <p>Waiting to choose dates ...</p>
-            <img v-if="!finded" src="/images/svg/waiting.svg" alt="" />
+            <img src="/images/svg/waiting.svg" alt="" />
+          </div>
+          <div class="dashboard-preview">
+            <div class="filter">
+              <p class="sub-title">Filters</p>
+              <div class="inputs">
+                <Input title="Words" data="" />
+              </div>
+              <Button
+                text="Apply"
+                :action="() => {}"
+                :fill="true"
+                class="apply"
+              />
+            </div>
+            <div class="tweets">
+              <p>Tweets</p>
+            </div>
+            <div class="info">
+              <p>
+                <span>Info :</span>By default all tweets with green bird will be
+                remove, you can select which tweets to keep by clicking on
+                birds.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -49,7 +73,7 @@
 import Input from "@/Components/input.vue";
 import Button from "@/Components/button.vue";
 
-const finded = false;
+const finded = true;
 </script>
 
 <style lang="scss" scoped>
@@ -88,8 +112,8 @@ const finded = false;
 }
 
 .dashboard {
-  display: grid;
   position: relative;
+  display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(2, 1fr) 0.4fr;
   grid-column-gap: 2em;
@@ -110,6 +134,11 @@ const finded = false;
     font-weight: 600;
     margin: 0.5em;
   }
+  .sub-title {
+    font-size: 2em;
+    font-weight: 500;
+    margin: 0.5em;
+  }
 }
 
 .select-date {
@@ -119,11 +148,6 @@ const finded = false;
   flex-direction: column;
   align-items: baseline;
   row-gap: 1em;
-
-  .title:nth-child(3) {
-    font-size: 1.5em;
-    font-weight: 500;
-  }
 
   .inputs {
     width: 80%;
@@ -168,6 +192,30 @@ const finded = false;
 
       img {
         width: 50%;
+      }
+    }
+
+    .dashboard-preview {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(2, 1fr) 0.4fr;
+      grid-column-gap: 2em;
+      grid-row-gap: 1em;
+
+      .filter {
+        grid-area: 1 / 1 / 3 / 2;
+        display: flex;
+        flex-direction: column;
+        align-items: baseline;
+        gap: 1em;
+      }
+
+      .tweets {
+        grid-area: 1 / 2 / 3 / 5;
+      }
+
+      .info {
+        grid-area: 3 / 1 / 4 / 5;
       }
     }
   }
