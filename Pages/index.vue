@@ -56,7 +56,7 @@ const router = useRouter();
 
 <style lang="scss" scoped>
 @forward "@/assets/scss/variables/fonts";
-@forward "@/assets/scss/variables/colors";
+@import "@/assets/scss/colors.scss";
 
 .home-container {
   display: grid;
