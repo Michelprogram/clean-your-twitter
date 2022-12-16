@@ -46,7 +46,16 @@
               />
             </div>
             <div class="tweets">
-              <p>Tweets</p>
+              <Tweet
+                v-for="(tweet, i) in tweets"
+                :key="i"
+                :name="tweet.name"
+                :pseudo="tweet.pseudo"
+                :text="tweet.text"
+                :date="tweet.date"
+                :avatar="tweet.avatar"
+                :remove="tweet.remove"
+              />
             </div>
             <div class="info">
               <p>
@@ -72,8 +81,41 @@
 <script setup lang="ts">
 import Input from "@/Components/input.vue";
 import Button from "@/Components/button.vue";
+import Tweet from "@/Components/tweet.vue";
 
 const finded = true;
+
+const tweets = [
+  {
+    name: "Dorian Gauron",
+    remove: true,
+    pseudo: "Bivouac",
+    text: "You have to be burning with an idea, or a problem, or a wrong that you want to right. If you’re not passionate enough from the start, you’ll never stick it out.",
+    date: "12:15 May 19, 2009",
+    avatar:
+      "https://voi.img.pmdstatic.net/fit/http.3A.2F.2Fprd2-bone-image.2Es3-website-eu-west-1.2Eamazonaws.2Ecom.2Fprismamedia_people.2F2019.2F02.2F18.2Fbb0b984d-d20b-4053-8e15-2be033766e38.2Ejpeg/2048x1536/quality/80/mister-v.jpeg",
+  },
+  {
+    name: "Dorian Gauron",
+    pseudo: "Bivouac",
+    remove: true,
+
+    text: "You have to be burning with an idea, or a problem, or a wrong that you want to right. If you’re not passionate enough from the start, you’ll never stick it out.",
+    date: "12:15 May 19, 2009",
+    avatar:
+      "https://voi.img.pmdstatic.net/fit/http.3A.2F.2Fprd2-bone-image.2Es3-website-eu-west-1.2Eamazonaws.2Ecom.2Fprismamedia_people.2F2019.2F02.2F18.2Fbb0b984d-d20b-4053-8e15-2be033766e38.2Ejpeg/2048x1536/quality/80/mister-v.jpeg",
+  },
+  {
+    name: "Dorian Gauron",
+    pseudo: "Bivouac",
+    remove: false,
+
+    text: "You have to be burning with an idea, or a problem, or a wrong that you want to right. If you’re not passionate enough from the start, you’ll never stick it out.",
+    date: "12:15 May 19, 2009",
+    avatar:
+      "https://voi.img.pmdstatic.net/fit/http.3A.2F.2Fprd2-bone-image.2Es3-website-eu-west-1.2Eamazonaws.2Ecom.2Fprismamedia_people.2F2019.2F02.2F18.2Fbb0b984d-d20b-4053-8e15-2be033766e38.2Ejpeg/2048x1536/quality/80/mister-v.jpeg",
+  },
+];
 </script>
 
 <style lang="scss" scoped>
@@ -199,8 +241,7 @@ const finded = true;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       grid-template-rows: repeat(2, 1fr) 0.4fr;
-      grid-column-gap: 2em;
-      grid-row-gap: 1em;
+      margin: 1em;
 
       .filter {
         grid-area: 1 / 1 / 3 / 2;
@@ -212,10 +253,14 @@ const finded = true;
 
       .tweets {
         grid-area: 1 / 2 / 3 / 5;
+        outline: 2px solid blue;
+        height: 350px;
       }
 
       .info {
         grid-area: 3 / 1 / 4 / 5;
+
+        outline: 2px solid blue;
       }
     }
   }
