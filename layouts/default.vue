@@ -1,15 +1,13 @@
 <template>
   <div>
-    <p>Layout</p>
-    <slot />
+    <Header />
+    <Clean />
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import Header from "@/Components/header.vue";
+import Clean from "@/Pages/clean.vue";
+</script>
 
-<style lang="scss" scoped>
-@import "@/assets/colors";
-p {
-  color: $red;
-}
-</style>
+<style lang="scss" scoped></style>

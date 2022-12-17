@@ -1,5 +1,7 @@
 <template>
-  <div>ouioui</div>
+  <div>
+    <p>Login</p>
+  </div>
 </template>
 
 <script setup></script>
