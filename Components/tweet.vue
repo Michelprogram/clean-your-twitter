@@ -9,9 +9,9 @@
         </div>
       </div>
       <img
-        @click="updateLogo()"
+        @click="updateLink"
         class="twitter-logo"
-        :src="logo"
+        :src="link"
         alt=""
         srcset=""
       />
@@ -49,16 +49,14 @@ const props = defineProps({
   },
 });
 
-const remove = ref(true);
+const remove = ref(false);
+const link = ref("/images/svg/twitter-green.svg");
 
-const logo = computed(() => {
-  const path = "/images/svg/";
-
-  return remove ? path + "twitter-blue.svg" : path + "twitter-green.svg";
-});
-
-const updateLogo = () => {
+const updateLink = () => {
   remove.value = !remove.value;
+  link.value = remove.value
+    ? "/images/svg/twitter-blue.svg"
+    : "/images/svg/twitter-green.svg";
 };
 </script>
 
