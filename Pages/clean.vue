@@ -54,7 +54,6 @@
                 :text="tweet.text"
                 :date="tweet.date"
                 :avatar="tweet.avatar"
-                :remove="tweet.remove"
               />
             </div>
             <div class="info">
@@ -164,7 +163,9 @@ const tweets = [
   width: 90%;
   margin-left: 5%;
 
-  div {
+  .preview,
+  .select-date,
+  .clean-info {
     background-color: $highlighted;
     border-radius: 15px;
     color: $main;
@@ -253,8 +254,12 @@ const tweets = [
 
       .tweets {
         grid-area: 1 / 2 / 3 / 5;
-        outline: 2px solid blue;
         height: 350px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1em;
+        overflow-y: scroll;
       }
 
       .info {
