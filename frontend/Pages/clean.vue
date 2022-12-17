@@ -58,15 +58,17 @@
             </div>
             <div class="info">
               <p>
-                <span>Info :</span>By default all tweets with green bird will be
-                remove, you can select which tweets to keep by clicking on
-                birds.
+                <span class="sub-title">Info :</span>By default all tweets with
+                green bird will be remove, you can select which tweets to keep
+                by clicking on birds.
               </p>
             </div>
           </div>
         </div>
       </div>
-      <div class="clean-info"></div>
+      <div class="clean-info">
+        <Button text="Clean" :action="() => {}" fill="true" />
+      </div>
     </div>
     <div class="shapes">
       <img src="/images/svg/shapes/fraise.svg" alt="" />
@@ -242,6 +244,7 @@ const tweets = [
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       grid-template-rows: repeat(2, 1fr) 0.4fr;
+      row-gap: 2em;
       margin: 1em;
 
       .filter {
@@ -265,7 +268,9 @@ const tweets = [
       .info {
         grid-area: 3 / 1 / 4 / 5;
 
-        outline: 2px solid blue;
+        p:not(span) {
+          font-size: 1.5em;
+        }
       }
     }
   }
@@ -273,5 +278,14 @@ const tweets = [
 .clean-info {
   height: 10vh;
   grid-area: 3 / 1 / 4 / 5;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  div {
+    font-size: 1.5em;
+    width: 10%;
+  }
 }
 </style>

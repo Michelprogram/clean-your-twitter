@@ -64,6 +64,7 @@ const router = useRouter();
   grid-template-rows: 1fr;
   grid-column-gap: 1em;
   grid-row-gap: 0px;
+  padding-top: 3em;
 
   width: 90%;
   margin-left: 5%;
