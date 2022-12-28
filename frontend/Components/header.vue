@@ -10,9 +10,13 @@
       </div>
       <div class="menu">
         <NuxtLink to="/">Clean your twitter</NuxtLink>
+        <NuxtLink v-if="isConnected" to="/clean">Dashboard</NuxtLink>
         <NuxtLink to="about">About</NuxtLink>
       </div>
-      <div class="connect">
+      <div v-if="isConnected" class="connect">
+        <img class="picture-profile" :src="profilePicture" alt="" srcset="" />
+      </div>
+      <div v-else class="connect">
         <Button class="btn" text="Connect" :action="login" :fill="false" />
       </div>
     </div>
@@ -22,10 +26,44 @@
 
 <script setup lang="ts">
 import Button from "@/Components/button.vue";
+import { generateTwitterOAuth } from "../api/twitter";
+
+const cookie = useCookie("token-twitter");
+const url = useRoute();
+
+const profilePicture = ref("");
 
 const login = (): void => {
-  useRouter().push("/login");
+  location.href = generateTwitterOAuth();
 };
+
+const authBackend = async () => {
+  const url = "http://localhost:3021/auth/backend";
+
+  const request = await fetch(url, {
+    credentials: "include",
+  });
+
+  const data = await request.json();
+
+  return data.user.profile.data.profile_image_url;
+};
+
+const isConnected = computed((): boolean => {
+  return profilePicture.value != "";
+});
+
+onMounted(async () => {
+  //Regarde si l'url contient le jwt puis set le cookie
+  if (url.query.info) {
+    const jwtToken = url.query.info as string;
+    cookie.value = jwtToken;
+  }
+  //Cookie existe verifie l'identité
+  if (cookie.value) {
+    profilePicture.value = await authBackend();
+  }
+});
 </script>
 
 <style lang="scss" scoped>
@@ -33,7 +71,7 @@ const login = (): void => {
 
 $size-width: 90%;
 $size-edge: 40%;
-$size-center: 20%;
+$size-center: 40%;
 
 .header-container {
   display: flex;
@@ -102,6 +140,10 @@ $size-center: 20%;
 
     .btn {
       width: fit-content;
+    }
+
+    .picture-profile {
+      border-radius: 5px;
     }
   }
 }

@@ -64,6 +64,7 @@ const router = useRouter();
   grid-template-rows: 1fr;
   grid-column-gap: 1em;
   grid-row-gap: 0px;
+  padding-top: 3em;
 
   width: 90%;
   margin-left: 5%;
@@ -81,7 +82,7 @@ const router = useRouter();
   gap: 3%;
 
   .title {
-    font-size: 6em;
+    font-size: 6vw;
     font-family: "Faustina", serif;
     font-weight: 700;
     font-style: normal;
@@ -89,7 +90,7 @@ const router = useRouter();
   }
 
   .presentation {
-    font-size: 1.3em;
+    font-size: 1.5vw;
   }
 
   .btns {
@@ -115,7 +116,7 @@ const router = useRouter();
       color: $main;
 
       font-family: "Faustina", serif;
-      font-size: 3em;
+      font-size: 3vw;
       letter-spacing: 0.05em;
       font-weight: 700;
     }
