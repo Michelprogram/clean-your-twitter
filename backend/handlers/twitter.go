@@ -99,7 +99,12 @@ func Find10LastTweet(w http.ResponseWriter, r *http.Request) {
 
 	twitter_api.SetToken(user.User.Token)
 
-	res, _ := twitter_api.GetTweets(10, twitter_id)
+	res, err := twitter_api.GetTweets(10, twitter_id)
+
+	if err != nil {
+		fmt.Fprintf(w, "%s", err.Error())
+		return
+	}
 
 	fmt.Fprintf(w, "%s", res)
 }
