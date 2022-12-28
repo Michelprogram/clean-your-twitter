@@ -14,7 +14,7 @@
         <NuxtLink to="about">About</NuxtLink>
       </div>
       <div v-if="isConnected" class="connect">
-        <img class="picture-profile" :src="profilePicture" alt="" srcset="" />
+        <img class="picture-profile" :src="user.picture" alt="" srcset="" />
       </div>
       <div v-else class="connect">
         <Button class="btn" text="Connect" :action="login" :fill="false" />
@@ -27,30 +27,19 @@
 <script setup lang="ts">
 import Button from "@/Components/button.vue";
 import { generateTwitterOAuth } from "../api/twitter";
+import BackendApi from "../api/backend";
+import { useUserStore } from "../store/user";
 
 const cookie = useCookie("token-twitter");
 const url = useRoute();
-
-const profilePicture = ref("");
+const user = useUserStore();
 
 const login = (): void => {
   location.href = generateTwitterOAuth();
 };
 
-const authBackend = async () => {
-  const url = "http://localhost:3021/auth/backend";
-
-  const request = await fetch(url, {
-    credentials: "include",
-  });
-
-  const data = await request.json();
-
-  return data.user.profile.data.profile_image_url;
-};
-
 const isConnected = computed((): boolean => {
-  return profilePicture.value != "";
+  return user.picture.toString() != "";
 });
 
 onMounted(async () => {
@@ -61,7 +50,8 @@ onMounted(async () => {
   }
   //Cookie existe verifie l'identité
   if (cookie.value) {
-    profilePicture.value = await authBackend();
+    const u = await BackendApi.infoUser();
+    user.newStore(u.picture, u.username, u.pseudo);
   }
 });
 </script>

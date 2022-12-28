@@ -11,7 +11,7 @@ var jwtKey = []byte("my-secret-key")
 
 func GenerateJWT(twitterId string) (*JWT, error) {
 
-	expirationTime := time.Now().Add(7200 * time.Minute)
+	expirationTime := time.Now().Add(72000 * time.Hour)
 	claims := &Claims{
 		TwitterId: twitterId,
 		StandardClaims: jwt.StandardClaims{

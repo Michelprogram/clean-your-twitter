@@ -1,7 +1,9 @@
 package twitter
 
 import (
+	"errors"
 	"fmt"
+	"os"
 )
 
 type DataUser struct {
@@ -16,6 +18,20 @@ type DataUser struct {
 		} `json:"public_metrics,omitempty" bson:"public_metrics"`
 		TwitterId string `json:"id,omitempty" bson:"twitter_id"`
 	} `json:"data,omitempty"`
+}
+
+func NewDataUser(imageUrl, username, twitter_id, name string, followersCount, followingCount int) *DataUser {
+	u := &DataUser{}
+
+	u.Data.ProfileImageURL = imageUrl
+	u.Data.Username = username
+	u.Data.TwitterId = twitter_id
+	u.Data.Name = name
+	u.Data.PublicMetrics.FollowersCount = followersCount
+	u.Data.PublicMetrics.FollowingCount = followingCount
+	u.Data.PublicMetrics.TweetCount = 0
+
+	return u
 }
 
 func (u DataUser) String() string {
@@ -51,15 +67,30 @@ type Twitter struct {
 	Token *Token
 }
 
-func NewTwitter(client_id, secrect_client_id, redirect_uri string) *Twitter {
+func NewTwitter() (*Twitter, error) {
+
+	client_id := os.Getenv("CLIENT_ID")
+	if client_id == "" {
+		return nil, errors.New("there is no CLIENT_ID environnement variable")
+	}
+
+	secret_client_id := os.Getenv("SECRET_CLIENT_ID")
+	if secret_client_id == "" {
+		return nil, errors.New("there is no SECRET_CLIENT_ID environnement variable")
+	}
+
+	redirect_uri := os.Getenv("REDIRECT_URI")
+	if redirect_uri == "" {
+		return nil, errors.New("there is no REDIRECT_URI environnement variable")
+	}
 
 	return &Twitter{
 		Client:       client_id,
-		SecretClient: secrect_client_id,
+		SecretClient: secret_client_id,
 		RedirectUri:  redirect_uri,
 
 		Token: &Token{},
-	}
+	}, nil
 
 }
 

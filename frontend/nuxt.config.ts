@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   buildDir: "dist",
+  modules: ["@pinia/nuxt"],
   css: ["@/assets/scss/main.scss"],
   vite: {
     css: {

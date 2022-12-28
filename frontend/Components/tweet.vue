@@ -20,7 +20,7 @@
       <p>{{ text }}</p>
     </div>
     <div class="footer">
-      <p>{{ date }}</p>
+      <p>{{ displayDate }}</p>
     </div>
   </div>
 </template>
@@ -58,6 +58,20 @@ const updateLink = () => {
     ? "/images/svg/twitter-blue.svg"
     : "/images/svg/twitter-green.svg";
 };
+
+const displayDate = computed((): string => {
+  const options: Intl.DateTimeFormatOptions = {
+    hour: "numeric",
+    minute: "numeric",
+    month: "long",
+    year: "numeric",
+    day: "numeric",
+  };
+  const formatter = Intl.DateTimeFormat("en-US", options);
+  const date = new Date(props.date);
+
+  return formatter.format(date);
+});
 </script>
 
 <style lang="scss" scoped>

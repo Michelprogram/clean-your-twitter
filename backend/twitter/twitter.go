@@ -2,6 +2,8 @@ package twitter
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"net/url"
 )
 
@@ -18,7 +20,11 @@ func (twitter *Twitter) GenerateToken(code string) error {
 	data.Set("redirect_uri", twitter.RedirectUri)
 	data.Set("code_verifier", "8KxxO-RPl0bLSxX5AWwgdiFbMnry_VOKzFeIlVA7NoA")
 
-	body, _ := postHTTP(data, token_url, twitter)
+	body, err := postHTTP(data, token_url, twitter)
+
+	if err != nil {
+		return err
+	}
 
 	json.Unmarshal([]byte(body), &token)
 
@@ -35,7 +41,13 @@ func (twitter *Twitter) RefreshToken() error {
 	data.Set("refresh_token", twitter.Token.Refresh)
 	data.Set("grant_type", "refresh_token")
 
-	body, _ := postHTTP(data, token_url, twitter)
+	body, err := postHTTP(data, token_url, twitter)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(body)
 
 	json.Unmarshal([]byte(body), &token)
 
@@ -61,6 +73,19 @@ func (twitter Twitter) UsersInfo() (*DataUser, error) {
 
 }
 
-func (twitter Twitter) GetTweets(n int)(){
-	
+func (twitter Twitter) GetTweets(n int, twitter_id string) (any, error) {
+
+	if n <= 0 || n > 100 {
+		return nil, errors.New("number should be between 1 and 100")
+	}
+
+	var path string = fmt.Sprintf("https://api.twitter.com/2/users/%s/tweets?max_results=10&tweet.fields=created_at", twitter_id)
+	body, err := getHTTP(path, &twitter)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return body, nil
+
 }

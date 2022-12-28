@@ -15,6 +15,7 @@ func AuthBackend(next http.Handler) http.Handler {
 			return
 		}
 
+
 		//Decode jwt to get twitter id
 		twitter_id.Value, err = jwt.DecodeJwt(twitter_id.Value)
 

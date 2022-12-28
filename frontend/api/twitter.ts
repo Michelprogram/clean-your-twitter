@@ -1,6 +1,6 @@
 import { OAuthParameters } from "../types/api";
 
-const REDIRECT_URI = "http://www.localhost:3021/auth/twitter";
+const REDIRECT_URI = "http://www.localhost:3021/twitter/auth";
 const CLIENT_ID = "UGVlUFB0N0pxeXA2UWhxX0tiZlI6MTpjaQ";
 
 export function generateTwitterOAuth(): string {

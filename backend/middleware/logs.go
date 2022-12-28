@@ -22,11 +22,11 @@ func Logs(next http.Handler) http.Handler {
 		jwt, err := r.Cookie("token-twitter")
 		//get ip adresse
 
-		if err != nil {
+		if err != nil || jwt == nil {
 			logger.Printf(" %s -> %s\n", r.Method, r.URL.Path)
+		} else {
+			logger.Printf("%s -> %s jwt : %s\n", r.Method, r.URL.Path, jwt.Value)
 		}
-
-		logger.Printf("%s -> %s jwt : %s\n", r.Method, r.URL.Path, jwt.Value)
 
 		next.ServeHTTP(w, r)
 	})

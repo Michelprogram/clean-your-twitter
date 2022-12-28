@@ -2,6 +2,7 @@ package twitter
 
 import (
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -39,6 +40,10 @@ func getHTTP(url string, twitter *Twitter) (string, error) {
 		return "", err
 	}
 
+	if resp.StatusCode != 200 {
+		return "", errors.New(string(resp_body))
+	}
+
 	return string(resp_body), nil
 }
 
@@ -49,15 +54,24 @@ func postHTTP(data url.Values, url string, twitter *Twitter) (string, error) {
 	resp, _ := http.NewRequest("POST", url, strings.NewReader(encoded))
 	resp.Header.Set("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8")
 	resp.Header.Set("Authorization", createBasicHeader(twitter))
+	fmt.Println(createBasicHeader(twitter))
 
 	client := &http.Client{}
-	response, error := client.Do(resp)
-	if error != nil {
-		return "", error
+	response, err := client.Do(resp)
+
+	if err != nil {
+		return "", err
 	}
 	defer response.Body.Close()
 
-	body, _ := ioutil.ReadAll(response.Body)
+	body, err := ioutil.ReadAll(response.Body)
 
+	if err != nil {
+		return "", err
+	}
+
+	if response.StatusCode != 200 {
+		return "", errors.New(string(body))
+	}
 	return string(body), nil
 }

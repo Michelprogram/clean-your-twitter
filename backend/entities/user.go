@@ -10,13 +10,14 @@ type User struct {
 	TweetDeleted int               `json:"tweet_deleted,omitempty" bson:"tweet_deleted"`
 }
 
-type UserMongo struct {
-	User User `json:"user,omitempty" bson:"user"`
-}
-
 func NewUser(profile *twitter.DataUser, token *twitter.Token) *User {
 	return &User{
 		Profile: profile,
 		Token:   token,
 	}
 }
+
+type UserMongo struct {
+	User User `json:"user,omitempty" bson:"user"`
+}
+

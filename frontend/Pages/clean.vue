@@ -4,8 +4,8 @@
       <div class="select-date">
         <p class="title">Select</p>
         <div class="inputs">
-          <Input title="From" data="" />
-          <Input title="To" data="" />
+          <Input title="From" data="" disabled="true" />
+          <Input title="To" data="" disabled="true" />
         </div>
         <p class="sub-title">Suggestions</p>
         <div class="info">
@@ -32,7 +32,7 @@
             <p>Waiting to choose dates ...</p>
             <img src="/images/svg/waiting.svg" alt="" />
           </div>
-          <div class="dashboard-preview">
+          <div v-else class="dashboard-preview">
             <div class="filter">
               <p class="sub-title">Filters</p>
               <div class="inputs">
@@ -49,11 +49,11 @@
               <Tweet
                 v-for="(tweet, i) in tweets"
                 :key="i"
-                :name="tweet.name"
-                :pseudo="tweet.pseudo"
+                :name="user.pseudo"
+                :pseudo="user.username"
                 :text="tweet.text"
-                :date="tweet.date"
-                :avatar="tweet.avatar"
+                :date="tweet.created_at"
+                :avatar="user.picture"
               />
             </div>
             <div class="info">
@@ -83,40 +83,18 @@
 import Input from "@/Components/input.vue";
 import Button from "@/Components/button.vue";
 import Tweet from "@/Components/tweet.vue";
+import BackendApi from "../api/backend";
+import { useUserStore } from "../store/user";
+const user = useUserStore();
 
-const finded = true;
+let finded = false;
 
-const tweets = [
-  {
-    name: "Dorian Gauron",
-    remove: true,
-    pseudo: "Bivouac",
-    text: "You have to be burning with an idea, or a problem, or a wrong that you want to right. If you’re not passionate enough from the start, you’ll never stick it out.",
-    date: "12:15 May 19, 2009",
-    avatar:
-      "https://voi.img.pmdstatic.net/fit/http.3A.2F.2Fprd2-bone-image.2Es3-website-eu-west-1.2Eamazonaws.2Ecom.2Fprismamedia_people.2F2019.2F02.2F18.2Fbb0b984d-d20b-4053-8e15-2be033766e38.2Ejpeg/2048x1536/quality/80/mister-v.jpeg",
-  },
-  {
-    name: "Dorian Gauron",
-    pseudo: "Bivouac",
-    remove: true,
+const tweets = ref([]);
 
-    text: "You have to be burning with an idea, or a problem, or a wrong that you want to right. If you’re not passionate enough from the start, you’ll never stick it out.",
-    date: "12:15 May 19, 2009",
-    avatar:
-      "https://voi.img.pmdstatic.net/fit/http.3A.2F.2Fprd2-bone-image.2Es3-website-eu-west-1.2Eamazonaws.2Ecom.2Fprismamedia_people.2F2019.2F02.2F18.2Fbb0b984d-d20b-4053-8e15-2be033766e38.2Ejpeg/2048x1536/quality/80/mister-v.jpeg",
-  },
-  {
-    name: "Dorian Gauron",
-    pseudo: "Bivouac",
-    remove: false,
-
-    text: "You have to be burning with an idea, or a problem, or a wrong that you want to right. If you’re not passionate enough from the start, you’ll never stick it out.",
-    date: "12:15 May 19, 2009",
-    avatar:
-      "https://voi.img.pmdstatic.net/fit/http.3A.2F.2Fprd2-bone-image.2Es3-website-eu-west-1.2Eamazonaws.2Ecom.2Fprismamedia_people.2F2019.2F02.2F18.2Fbb0b984d-d20b-4053-8e15-2be033766e38.2Ejpeg/2048x1536/quality/80/mister-v.jpeg",
-  },
-];
+onMounted(async () => {
+  tweets.value = await BackendApi.tweets();
+  finded = true;
+});
 </script>
 
 <style lang="scss" scoped>
@@ -205,9 +183,6 @@ const tweets = [
   .info {
     font-size: 1.2em;
     width: 90%;
-  }
-
-  .find-tweets {
   }
 }
 .preview {
