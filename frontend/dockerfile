@@ -1,16 +1,16 @@
-FROM node:lts as builder
+FROM node:18-alpine3.16
 
 WORKDIR /app
 
-COPY package.json /app/
-COPY yarn.lock /app/
+ADD . ./
 
-RUN yarn install && yarn cache clean
+RUN : \
+    && yarn install \
+    && yarn build --standalone --production=true \
+    && rm -rf node_modules \
+    && rm package.json \
+    && yarn cache clean \
+    && :
 
-COPY . /app/
-
-RUN yarn build --production=true
-
+ENTRYPOINT [ "node", ".output/server/index.mjs" ]
 EXPOSE 3000
-
-CMD [ "yarn", "start" ]
