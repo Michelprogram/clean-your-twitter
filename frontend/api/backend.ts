@@ -1,6 +1,11 @@
+let apiEndpoint =
+  process.env.NODE_ENV == "production"
+    ? "http://clean-your-tw.online:3021"
+    : "http://localhost:3021";
+
 export default class BackendApi {
   static infoUser = async (): Promise<User> => {
-    const url = "http://localhost:3021/backend/auth";
+    const url = apiEndpoint + "/backend/auth";
 
     const request = await fetch(url, {
       credentials: "include",
@@ -20,7 +25,7 @@ export default class BackendApi {
   };
 
   static tweets = async () => {
-    const url = "http://localhost:3021/backend/tweets";
+    const url = apiEndpoint + "/backend/tweets";
 
     const request = await fetch(url, {
       credentials: "include",

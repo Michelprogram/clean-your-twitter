@@ -1,25 +1,16 @@
-#Récupération d'une image node basé sur alpine et c'est français 🇫🇷
-FROM node:19-alpine
+FROM node:lts as builder
 
-#Création d'un répertoire dans le container
 WORKDIR /app
 
-#Récupération du package.json contenant les dépendances du projet
-COPY package.json ./
+COPY package.json /app/
+COPY yarn.lock /app/
 
-#Découverte de yarn qui est un gestionnaie de package comme NPM
-COPY yarn.lock ./
+RUN yarn install && yarn cache clean
 
-#Installation des dépendances
-RUN yarn
-
-#Copy du fichier serveur, dockerignore avec node_modules
 COPY . /app/
 
-RUN yarn build
+RUN yarn build --production=true
 
-#Expose sur le port 8080
-EXPOSE 8080:8080
+EXPOSE 3000
 
-#Lance en dev, pas eu le temps d'essayer une fois le code compilé avec yarn build
-CMD ["yarn", "start"]
+CMD [ "yarn", "start" ]

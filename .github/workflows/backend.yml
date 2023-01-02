@@ -1,0 +1,137 @@
+name: Backend workflow
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - backend/*
+
+jobs:
+  build-application:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+
+      - name: Create env file
+        run: |
+          cd backend
+          touch .env
+          echo DATABASE=${{ secrets.DATABASE }} >> .env
+          echo COLLECTION=${{ secrets.COLLECTION }} >> .env
+          echo IDENTIFIANT_DB=${{ secrets.IDENTIFIANT_DB }} >> .env
+          echo PASSWORD_DB=${{ secrets.PASSWORD_DB }} >> .env
+          echo URL_DB=${{ secrets.URL_DB }} >> .env
+          echo CLIENT_ID=${{ secrets.CLIENT_ID }} >> .env
+          echo SECRET_CLIENT_ID=${{ secrets.SECRET_CLIENT_ID }} >> .env
+          echo REDIRECT_URI=${{ secrets.REDIRECT_URI }} >> .env
+
+      - name: Build
+        run: |
+          cd backend
+          go build -v -o api server.go
+
+      - name: Test
+        run: |
+          cd backend
+          go test -v ./... -coverprofile=coverage.out
+          go tool cover -func=coverage.out >> coverage.txt
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: backend/coverage.txt
+
+  discord-build:
+    needs: build-application
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get coverage file
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage
+
+      - name: Send message
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+          username: "Github Action"
+          avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
+          file: coverage.txt
+          message: "The backend project has been built & tested is ready to deploy 🚀"
+
+  build-publish-docker:
+    needs: build-application
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create env file
+        run: |
+          cd backend
+          touch .env
+          echo DATABASE=${{ secrets.DATABASE }} >> .env
+          echo COLLECTION=${{ secrets.COLLECTION }} >> .env
+          echo IDENTIFIANT_DB=${{ secrets.IDENTIFIANT_DB }} >> .env
+          echo PASSWORD_DB=${{ secrets.PASSWORD_DB }} >> .env
+          echo URL_DB=${{ secrets.URL_DB }} >> .env
+          echo CLIENT_ID=${{ secrets.CLIENT_ID }} >> .env
+          echo SECRET_CLIENT_ID=${{ secrets.SECRET_CLIENT_ID }} >> .env
+          echo REDIRECT_URI=${{ secrets.REDIRECT_URI }} >> .env
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Github Container Registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: ./backend/.
+          push: true
+          tags: michelprogram/clean-your-twitter-api:latest
+
+  deploy-api:
+    name: Deploy on hostinger
+    needs: build-publish-docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME_SSH }}
+          password: ${{ secrets.PASSWORD_SSH }}
+          port: ${{ secrets.PORT }}
+          script: |
+            docker logout
+            docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
+            docker stop twitter-api && docker container rm twitter-api && true
+            docker pull michelprogram/clean-your-twitter-api:latest
+            docker container run -d --name twitter-api -p 3021:3021 michelprogram/clean-your-twitter-api
+
+  discord-deploy:
+    needs: deploy-api
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send message
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+          username: "Github Action"
+          avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
+          message: "The backend project has been deploy you can reach at http://clean-your-tw.online:3021/ping 🛰️"

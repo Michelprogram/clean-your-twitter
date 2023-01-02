@@ -1,6 +1,10 @@
 import { OAuthParameters } from "../types/api";
 
-const REDIRECT_URI = "http://www.localhost:3021/twitter/auth";
+const REDIRECT_URI =
+  process.env.NODE_ENV == "production"
+    ? "http://clean-your-tw.online:3021/twitter/auth"
+    : "http://www.localhost:3021/twitter/auth";
+
 const CLIENT_ID = "UGVlUFB0N0pxeXA2UWhxX0tiZlI6MTpjaQ";
 
 export function generateTwitterOAuth(): string {

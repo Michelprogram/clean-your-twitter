@@ -8,5 +8,3 @@
 <script setup>
 import Header from "@/Components/header.vue";
 </script>
-
-<style lang="scss" scoped></style>

@@ -1,0 +1,113 @@
+name: Frontend workflow
+
+on:
+  push:
+    branches:
+      - main
+    #paths:
+    #  - frontend/*
+
+jobs:
+  build-application:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js ⚙️
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Install dependencies 📦
+        run: |
+          cd frontend
+          yarn install --frozen-lockfile --prefer-offline
+
+      - name: Build application
+        run: |
+          cd frontend
+          yarn run build --production=true
+
+      - name: Zip build folder
+        run: zip build-frontend.zip ./frontend/.output/* -r
+
+      - name: Save Build
+        uses: actions/upload-artifact@v2
+        with:
+          name: zip-frontend
+          path: build-frontend.zip
+          retention-days: 2
+
+  discord-build:
+    needs: build-application
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get zip build
+        uses: actions/download-artifact@v2
+        with:
+          name: zip-frontend
+
+      - name: Send message
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+          username: "Github Action"
+          avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
+          file: build-frontend.zip
+          message: "The Frontend project has been built and it's ready to deploy 🚀"
+
+  build-publish-docker:
+    needs: build-application
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Github Container Registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: ./frontend/.
+          push: true
+          tags: michelprogram/clean-your-twitter-web:latest
+
+  deploy-api:
+    name: Deploy on hostinger
+    needs: build-publish-docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME_SSH }}
+          password: ${{ secrets.PASSWORD_SSH }}
+          port: ${{ secrets.PORT }}
+          script: |
+            docker stop twitter-web && docker container rm twitter-web && true
+            docker pull michelprogram/clean-your-twitter-web:latest
+            docker container run -d --name twitter-web -p 3000:3000 michelprogram/clean-your-twitter-web
+
+  discord-deploy:
+    needs: deploy-api
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send message
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+          username: "Github Action"
+          avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
+          message: "The backend project has been deploy you can reach at http://clean-your-tw.online:3000 🛰️"
