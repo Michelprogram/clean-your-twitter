@@ -4,7 +4,7 @@
       <p class="title">When it’s time to clean your account !</p>
       <p class="presentation">
         Using the web application, you can easily clean up your Twitter account
-        and do your part in the fight against climate change.
+        and do your part in the fight against climate change..
       </p>
       <div class="btns">
         <Button
