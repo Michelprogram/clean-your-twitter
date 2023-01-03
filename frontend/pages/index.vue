@@ -7,16 +7,8 @@
         and do your part in the fight against climate change..
       </p>
       <div class="btns">
-        <Button
-          text="Connect"
-          :action="() => router.push('/login')"
-          :fill="true"
-        />
-        <Button
-          text="Learn More"
-          :action="() => router.push('/about')"
-          :fill="false"
-        />
+        <Button text="Connect" :action="login" :fill="true" />
+        <Button text="Learn More" :action="about" :fill="false" />
       </div>
     </div>
     <div class="preview">
@@ -50,8 +42,16 @@
 
 <script setup lang="ts">
 import Button from "@/Components/button.vue";
-
+import { generateTwitterOAuth } from "~~/api/twitter";
 const router = useRouter();
+
+const login = (): void => {
+  location.href = generateTwitterOAuth();
+};
+
+const about = (): void => {
+  router.push("/about");
+};
 </script>
 
 <style lang="scss" scoped>

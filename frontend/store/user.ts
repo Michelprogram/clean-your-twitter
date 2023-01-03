@@ -4,9 +4,9 @@ export const useUserStore = defineStore({
   id: "user-store",
   state: () => {
     return {
-      picture: String,
-      username: String,
-      pseudo: String,
+      picture: "",
+      username: "",
+      pseudo: "",
     };
   },
   actions: {
