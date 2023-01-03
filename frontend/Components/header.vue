@@ -39,7 +39,7 @@ const login = (): void => {
 };
 
 const isConnected = computed((): boolean => {
-  return user.picture.toString() != "";
+  return user.picture != "";
 });
 
 onMounted(async () => {
