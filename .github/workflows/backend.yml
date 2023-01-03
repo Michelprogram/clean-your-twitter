@@ -30,6 +30,7 @@ jobs:
           echo CLIENT_ID=${{ secrets.CLIENT_ID }} >> .env
           echo SECRET_CLIENT_ID=${{ secrets.SECRET_CLIENT_ID }} >> .env
           echo REDIRECT_URI=${{ secrets.REDIRECT_URI }} >> .env
+          echo CLIENT_URI=${{ secrets.CLIENT_URI }} >> .env
 
       - name: Build
         run: |
@@ -85,6 +86,7 @@ jobs:
           echo CLIENT_ID=${{ secrets.CLIENT_ID }} >> .env
           echo SECRET_CLIENT_ID=${{ secrets.SECRET_CLIENT_ID }} >> .env
           echo REDIRECT_URI=${{ secrets.REDIRECT_URI }} >> .env
+          echo CLIENT_URI=${{ secrets.CLIENT_URI }} >> .env
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2

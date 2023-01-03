@@ -9,11 +9,16 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 )
 
-var client_uri = "http://localhost:3000/"
-
 func AuthentificationTwitter(w http.ResponseWriter, r *http.Request) {
+
+	client_uri := os.Getenv("CLIENT_URI")
+
+	if client_uri == "" {
+		client_uri = "http://localhost:3000/"
+	}
 
 	var err error
 
