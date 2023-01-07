@@ -47,7 +47,7 @@ func main() {
 
 	//router.NotFoundHandler = handlers.ErrorRoute()
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:3000"},
+		AllowedOrigins:   []string{"http://localhost:3000", "http://clean-your-tw.online:3000"},
 		AllowCredentials: true,
 	})
 	fmt.Printf("🚀 Lancement de l'api sur le port %s\n", port)
