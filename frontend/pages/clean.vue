@@ -36,7 +36,7 @@
             <div class="filter">
               <p class="sub-title">Filters</p>
               <div class="inputs">
-                <Input title="Words" data="" />
+                <Input title="Words" data="" :input-event="filterTweets" />
               </div>
               <Button
                 text="Apply"
@@ -47,13 +47,10 @@
             </div>
             <div class="tweets">
               <Tweet
-                v-for="(tweet, i) in tweets"
+                v-for="(tweet, i) in copyTweets"
                 :key="i"
-                :name="user.pseudo"
-                :pseudo="user.username"
-                :text="tweet.text"
-                :date="tweet.created_at"
-                :avatar="user.picture"
+                :tweet="tweet"
+                :user="user"
               />
             </div>
             <div class="info">
@@ -83,19 +80,32 @@
 import Input from "@/Components/input.vue";
 import Button from "@/Components/button.vue";
 import Tweet from "@/Components/tweet.vue";
-import BackendApi from "../api/backend";
-import { useUserStore } from "../store/user";
-import type { Tweet as TTweet } from "@/types/api";
-const user = useUserStore();
+import BackendApi from "@/api/backend";
+import { useUserStore } from "@/store/user";
+import { Tweet as typedTweet } from "@/types/api";
+import { User } from "@/types/store";
+
+const user = useUserStore() as User;
 
 const finded = ref(false);
 
-const tweets = ref(Array<TTweet>);
+const tweets = ref<Array<typedTweet>>([]);
+
+const copyTweets = ref<Array<typedTweet>>([]);
 
 onMounted(async () => {
   tweets.value = await BackendApi.tweets();
+  copyTweets.value = tweets.value;
   finded.value = true;
 });
+
+const filterTweets = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const value = target.value.toLowerCase();
+  copyTweets.value = tweets.value.filter((tweet: any) =>
+    tweet.text.toLowerCase().includes(value)
+  );
+};
 </script>
 
 <style lang="scss" scoped>
@@ -227,8 +237,13 @@ onMounted(async () => {
         grid-area: 1 / 1 / 3 / 2;
         display: flex;
         flex-direction: column;
-        align-items: baseline;
         gap: 1em;
+
+        margin: 0.5em;
+
+        .sub-title {
+          margin: 0;
+        }
       }
 
       .tweets {

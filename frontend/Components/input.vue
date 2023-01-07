@@ -1,7 +1,12 @@
 <template>
   <div class="input">
     <label :for="inputName">{{ title }}</label>
-    <input type="text" :name="inputName" :id="inputName" />
+    <input
+      type="text"
+      :name="inputName"
+      :id="inputName"
+      @input="(e) => inputEvent?.(e)"
+    />
   </div>
 </template>
 
@@ -14,6 +19,10 @@ const props = defineProps({
   data: {
     type: String,
     required: true,
+  },
+  inputEvent: {
+    type: Function,
+    required: false,
   },
 });
 

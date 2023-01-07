@@ -2,10 +2,10 @@
   <div class="tweet">
     <div class="header">
       <div class="name">
-        <img :src="avatar" alt="" srcset="" class="profile-picture" />
+        <img :src="user.picture" alt="" srcset="" class="profile-picture" />
         <div>
-          <p>{{ name }}</p>
-          <p>@{{ pseudo }}</p>
+          <p>{{ user.username }}</p>
+          <p>@{{ user.pseudo }}</p>
         </div>
       </div>
       <img
@@ -17,34 +17,27 @@
       />
     </div>
     <div class="content">
-      <p>{{ text }}</p>
+      <p>{{ tweet.text }}</p>
     </div>
     <div class="footer">
       <p>{{ displayDate }}</p>
+      <a :href="tweetLink" target="_blank">Go to the tweet</a>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { Tweet } from "@/types/api";
+import { User } from "@/types/store";
+import { PropType } from "vue";
+
 const props = defineProps({
-  name: {
-    type: String,
+  user: {
+    type: Object as PropType<User>,
     required: true,
   },
-  pseudo: {
-    type: String,
-    required: true,
-  },
-  text: {
-    type: String,
-    required: true,
-  },
-  date: {
-    type: String,
-    required: true,
-  },
-  avatar: {
-    type: String,
+  tweet: {
+    type: Object as PropType<Tweet>,
     required: true,
   },
 });
@@ -68,9 +61,15 @@ const displayDate = computed((): string => {
     day: "numeric",
   };
   const formatter = Intl.DateTimeFormat("en-US", options);
-  const date = new Date(props.date);
+  const date = new Date(props.tweet.created_at);
 
   return formatter.format(date);
+});
+
+const tweetLink = computed((): string => {
+  const urls = props.tweet.entities.urls;
+  if (urls != undefined) return urls[0];
+  return `https://twitter.com/${props.user.pseudo}/status/${props.tweet.id}`;
 });
 </script>
 
@@ -123,6 +122,14 @@ $size-img: 55px;
   .footer {
     padding: 1em;
     opacity: 0.5;
+
+    display: inline-flex;
+    gap: 1em;
+
+    a {
+      text-decoration: underline;
+      color: #1da1f2;
+    }
   }
 }
 </style>

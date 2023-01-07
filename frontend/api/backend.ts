@@ -1,3 +1,6 @@
+import { Tweet } from "@/types/api";
+import { User } from "@/types/store";
+
 let apiEndpoint =
   process.env.NODE_ENV == "production"
     ? "http://clean-your-tw.online:3021"
@@ -24,8 +27,7 @@ export default class BackendApi {
     return res;
   };
 
-  //TODO : ADD promise type and update vue files
-  static tweets = async () => {
+  static tweets = async (): Promise<Array<Tweet>> => {
     const url = apiEndpoint + "/backend/tweets";
 
     const request = await fetch(url, {
@@ -34,15 +36,8 @@ export default class BackendApi {
 
     const json = await request.json();
 
+    console.log(json.data);
+
     return json.data;
   };
 }
-
-type User = {
-  picture: string;
-  username: string;
-  pseudo: string;
-};
-
-//
-//

@@ -20,8 +20,6 @@ func (twitter *Twitter) GenerateToken(code string) error {
 	data.Set("redirect_uri", twitter.RedirectUri)
 	data.Set("code_verifier", "8KxxO-RPl0bLSxX5AWwgdiFbMnry_VOKzFeIlVA7NoA")
 
-	fmt.Printf("Data : %v \n", data)
-
 	body, err := postHTTP(data, token_url, twitter)
 
 	if err != nil {
@@ -81,7 +79,7 @@ func (twitter Twitter) GetTweets(n int, twitter_id string) (any, error) {
 		return nil, errors.New("number should be between 1 and 100")
 	}
 
-	var path string = fmt.Sprintf("https://api.twitter.com/2/users/%s/tweets?max_results=10&tweet.fields=created_at", twitter_id)
+	var path string = fmt.Sprintf("https://api.twitter.com/2/users/%s/tweets?max_results=10&tweet.fields=created_at%%2Centities", twitter_id)
 	body, err := getHTTP(path, &twitter)
 
 	if err != nil {
