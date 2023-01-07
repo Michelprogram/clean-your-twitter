@@ -4,10 +4,10 @@ import (
 	"api-clean-twitter/database/repository"
 	"api-clean-twitter/entities"
 	"api-clean-twitter/jwt"
+	"api-clean-twitter/middleware"
 	"api-clean-twitter/twitter"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 )
@@ -15,10 +15,6 @@ import (
 func AuthentificationTwitter(w http.ResponseWriter, r *http.Request) {
 
 	client_uri := os.Getenv("CLIENT_URI")
-
-	if client_uri == "" {
-		client_uri = "http://localhost:3000/"
-	}
 
 	var err error
 
@@ -32,6 +28,7 @@ func AuthentificationTwitter(w http.ResponseWriter, r *http.Request) {
 	err = twitter.GenerateToken(code)
 
 	if err != nil {
+		middleware.Write(r, err)
 		http.Redirect(w, r, client_uri, http.StatusMovedPermanently)
 		return
 	}
@@ -40,6 +37,7 @@ func AuthentificationTwitter(w http.ResponseWriter, r *http.Request) {
 	dataUser, err := twitter.UsersInfo()
 
 	if err != nil {
+		middleware.Write(r, err)
 		http.Redirect(w, r, client_uri, http.StatusMovedPermanently)
 		return
 	}
@@ -53,7 +51,8 @@ func AuthentificationTwitter(w http.ResponseWriter, r *http.Request) {
 	jwt, err := jwt.GenerateJWT(user.Profile.Data.TwitterId)
 
 	if err != nil {
-		log.Fatal(err.Error())
+		middleware.Write(r, err)
+		http.Redirect(w, r, client_uri, http.StatusMovedPermanently)
 		return
 	}
 
@@ -112,8 +111,4 @@ func Find10LastTweet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintf(w, "%s", res)
-}
-
-func Test(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "pong")
 }
