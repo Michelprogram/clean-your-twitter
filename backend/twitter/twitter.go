@@ -20,6 +20,8 @@ func (twitter *Twitter) GenerateToken(code string) error {
 	data.Set("redirect_uri", twitter.RedirectUri)
 	data.Set("code_verifier", "8KxxO-RPl0bLSxX5AWwgdiFbMnry_VOKzFeIlVA7NoA")
 
+	fmt.Printf("Data : %v \n", data)
+
 	body, err := postHTTP(data, token_url, twitter)
 
 	if err != nil {
