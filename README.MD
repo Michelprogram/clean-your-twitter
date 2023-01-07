@@ -1,0 +1,1 @@
+act -W .github/workflows/backend.yml --secret-file=.env -j=build-application  --container-architecture linux/amd64

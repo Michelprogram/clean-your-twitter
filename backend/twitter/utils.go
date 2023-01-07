@@ -54,7 +54,6 @@ func postHTTP(data url.Values, url string, twitter *Twitter) (string, error) {
 	resp, _ := http.NewRequest("POST", url, strings.NewReader(encoded))
 	resp.Header.Set("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8")
 	resp.Header.Set("Authorization", createBasicHeader(twitter))
-	fmt.Println(createBasicHeader(twitter))
 
 	client := &http.Client{}
 	response, err := client.Do(resp)

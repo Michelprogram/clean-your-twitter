@@ -9,8 +9,6 @@ import (
 	"os"
 	"reflect"
 	"testing"
-
-	"github.com/joho/godotenv"
 )
 
 var err error
@@ -22,13 +20,6 @@ var user entities.User = entities.User{
 }
 
 func TestMain(m *testing.M) {
-
-	const PATH string = "../../.env"
-
-	err = godotenv.Load(PATH)
-	if err != nil {
-		log.Fatal("error loading .env file")
-	}
 
 	err = database.OpenConnection()
 
