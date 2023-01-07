@@ -23,11 +23,15 @@ func Logs(next http.Handler) http.Handler {
 		//get ip adresse
 
 		if err != nil || jwt == nil {
-			logger.Printf(" %s -> %s\n", r.Method, r.URL.Path)
+			logger.Printf("Method : %s at %s\n", r.Method, r.URL.Path)
 		} else {
-			logger.Printf("%s -> %s jwt : %s\n", r.Method, r.URL.Path, jwt.Value)
+			logger.Printf("Method : %s at %s  with token %s\n", r.Method, r.URL.Path, jwt.Value)
 		}
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+func Write(r *http.Request, err error) {
+	logger.Printf("Error : %s for method %s at %s\n", err, r.Method, r.URL.Path)
 }
