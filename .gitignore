@@ -5,6 +5,7 @@
 /*/.cache
 /*/.output
 .env
+.env.prod
 /*/dist
 /*/.DS_Store
 /*/assets/fonts/.DS_Store
