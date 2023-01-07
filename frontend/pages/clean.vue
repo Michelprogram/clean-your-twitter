@@ -67,7 +67,7 @@
         </div>
       </div>
       <div class="clean-info">
-        <Button text="Clean" :action="() => {}" fill="true" />
+        <Button text="Clean" :action="() => {}" :fill="true" />
       </div>
     </div>
     <div class="shapes">
@@ -85,15 +85,16 @@ import Button from "@/Components/button.vue";
 import Tweet from "@/Components/tweet.vue";
 import BackendApi from "../api/backend";
 import { useUserStore } from "../store/user";
+import type { Tweet as TTweet } from "@/types/api";
 const user = useUserStore();
 
-let finded = false;
+const finded = ref(false);
 
-const tweets = ref([]);
+const tweets = ref(Array<TTweet>);
 
 onMounted(async () => {
   tweets.value = await BackendApi.tweets();
-  finded = true;
+  finded.value = true;
 });
 </script>
 

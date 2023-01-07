@@ -7,3 +7,8 @@ export type OAuthParameters = {
   code_challenge_method: string;
   scope: string;
 };
+
+export type Tweet = {
+  text: string;
+  created_at: string;
+};

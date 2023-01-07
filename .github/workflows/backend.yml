@@ -10,6 +10,17 @@ on:
 jobs:
   build-application:
     runs-on: ubuntu-latest
+    env:
+      DATABASE=${{ secrets.DATABASE }}
+      COLLECTION=${{ secrets.COLLECTION }}
+      IDENTIFIANT_DB=${{ secrets.IDENTIFIANT_DB }}
+      PASSWORD_DB=${{ secrets.PASSWORD_DB }}
+      URL_DB=${{ secrets.URL_DB }}
+      CLIENT_ID=${{ secrets.CLIENT_ID }}
+      SECRET_CLIENT_ID=${{ secrets.SECRET_CLIENT_ID }}
+      REDIRECT_URI=${{ secrets.REDIRECT_URI }}
+      CLIENT_URI=${{ secrets.CLIENT_URI }}
+
     steps:
       - uses: actions/checkout@v3
 
@@ -17,20 +28,6 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: 1.19
-
-      - name: Create env file
-        run: |
-          cd backend
-          touch .env
-          echo DATABASE=${{ secrets.DATABASE }} >> .env
-          echo COLLECTION=${{ secrets.COLLECTION }} >> .env
-          echo IDENTIFIANT_DB=${{ secrets.IDENTIFIANT_DB }} >> .env
-          echo PASSWORD_DB=${{ secrets.PASSWORD_DB }} >> .env
-          echo URL_DB=${{ secrets.URL_DB }} >> .env
-          echo CLIENT_ID=${{ secrets.CLIENT_ID }} >> .env
-          echo SECRET_CLIENT_ID=${{ secrets.SECRET_CLIENT_ID }} >> .env
-          echo REDIRECT_URI=${{ secrets.REDIRECT_URI }} >> .env
-          echo CLIENT_URI=${{ secrets.CLIENT_URI }} >> .env
 
       - name: Build
         run: |
@@ -68,25 +65,12 @@ jobs:
           message: "The backend project has been built & tested is ready to deploy 🚀"
 
   build-publish-docker:
-    needs: build-application
+    #needs: build-application
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Create env file
-        run: |
-          cd backend
-          touch .env
-          echo DATABASE=${{ secrets.DATABASE }} >> .env
-          echo COLLECTION=${{ secrets.COLLECTION }} >> .env
-          echo IDENTIFIANT_DB=${{ secrets.IDENTIFIANT_DB }} >> .env
-          echo PASSWORD_DB=${{ secrets.PASSWORD_DB }} >> .env
-          echo URL_DB=${{ secrets.URL_DB }} >> .env
-          echo CLIENT_ID=${{ secrets.CLIENT_ID }} >> .env
-          echo SECRET_CLIENT_ID=${{ secrets.SECRET_CLIENT_ID }} >> .env
-          echo REDIRECT_URI=${{ secrets.REDIRECT_URI }} >> .env
-          echo CLIENT_URI=${{ secrets.CLIENT_URI }} >> .env
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -104,6 +88,16 @@ jobs:
         with:
           context: ./backend/.
           push: true
+          build-args: |
+            DATABASE=${{ secrets.DATABASE }}
+            COLLECTION=${{ secrets.COLLECTION }}
+            IDENTIFIANT_DB=${{ secrets.IDENTIFIANT_DB }}
+            PASSWORD_DB=${{ secrets.PASSWORD_DB }}
+            URL_DB=${{ secrets.URL_DB }}
+            CLIENT_ID=${{ secrets.CLIENT_ID }}
+            SECRET_CLIENT_ID=${{ secrets.SECRET_CLIENT_ID }}
+            REDIRECT_URI=${{ secrets.REDIRECT_URI }}
+            CLIENT_URI=${{ secrets.CLIENT_URI }}
           tags: michelprogram/clean-your-twitter-api:latest
 
   deploy-api:

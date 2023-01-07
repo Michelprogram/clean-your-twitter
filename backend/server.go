@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 
 	"github.com/gorilla/mux"
@@ -18,16 +17,12 @@ import (
 
 func main() {
 
-	err := godotenv.Load()
-
-	if err != nil {
-		log.Fatal("loading .env file")
-	}
+	var err error
 
 	err = database.OpenConnection()
 
 	if err != nil {
-		log.Fatal("connection to the database")
+		log.Fatalf("Connection to the database : %s", err)
 	}
 
 	var port string = os.Args[1]
