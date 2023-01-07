@@ -1,5 +1,3 @@
-import { Tweet } from "~~/types/api";
-
 let apiEndpoint =
   process.env.NODE_ENV == "production"
     ? "http://clean-your-tw.online:3021"

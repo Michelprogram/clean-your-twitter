@@ -17,15 +17,27 @@ func AuthentificationTwitter(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	client_uri := os.Getenv("CLIENT_URI")
-	
+
 	//Code Generate after logging
 	code := r.URL.Query().Get("code")
 
 	//Twitter api golang
-	twitter, _ := twitter.NewTwitter()
+	twitter, err := twitter.NewTwitter()
+
+	fmt.Printf("Twitter : %s\n", twitter)
+
+	if err != nil {
+		middleware.Write(r, err)
+		http.Redirect(w, r, client_uri, http.StatusMovedPermanently)
+		return
+	}
+
+	fmt.Printf("Code : %s\n", code)
 
 	//Generate token from new code
 	err = twitter.GenerateToken(code)
+
+	fmt.Printf("Token from code : %s\n", code)
 
 	if err != nil {
 		middleware.Write(r, err)
