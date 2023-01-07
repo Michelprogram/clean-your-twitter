@@ -9,15 +9,23 @@ jobs:
 
   conditional_backend_check_files:
     runs-on: ubuntu-20.04
+
+    outputs:
+      NB_FILES: ${{ steps.check_backend_file.outputs.BACKEND_FILE_CHANGED }}
+
     steps:
-      - uses: actions/checkout@v2
+
+      - name: Clone project and checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
 
       - name: Backend file changed check
         shell: bash
         id: check_backend_file
         run: |
-          git diff --name-only HEAD^ HEAD | grep "^backend/*"
-          echo "BACKEND_FILE_CHANGED=$?" >> $GITHUB_OUTPUT
+          diff_files=$(git diff --name-only HEAD^ HEAD | grep -c "^backend/*" || true)
+          echo "BACKEND_FILE_CHANGED=$diff_files" >> $GITHUB_OUTPUT
 
       - name: Read backend file changed
         run : |
@@ -26,7 +34,7 @@ jobs:
 
   build-application:
     needs: conditional_backend_check_files
-    if: needs.conditional_backend_check_files.steps.check_backend_file.outputs.BACKEND_FILE_CHANGED
+    if: needs.conditional_backend_check_files.outputs.NB_FILES != 0
     runs-on: ubuntu-20.04
     env:
       DATABASE: ${{ secrets.DATABASE }}
