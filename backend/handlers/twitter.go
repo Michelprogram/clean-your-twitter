@@ -14,10 +14,10 @@ import (
 
 func AuthentificationTwitter(w http.ResponseWriter, r *http.Request) {
 
-	client_uri := os.Getenv("CLIENT_URI")
-
 	var err error
 
+	client_uri := os.Getenv("CLIENT_URI")
+	
 	//Code Generate after logging
 	code := r.URL.Query().Get("code")
 
