@@ -5,25 +5,24 @@
       type="text"
       :name="inputName"
       :id="inputName"
-      @input="(e) => inputEvent?.(e)"
+      :value="modelValue"
+      @input="
+        $emit('update:modelValue', ($event.target as HTMLInputElement).value)
+      "
     />
   </div>
 </template>
 
 <script setup lang="ts">
+interface InputProps {
+  title: string;
+  modelValue: string;
+  inputEvent?: Function;
+}
+
 const props = defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-  data: {
-    type: String,
-    required: true,
-  },
-  inputEvent: {
-    type: Function,
-    required: false,
-  },
+  title: String,
+  modelValue: String,
 });
 
 const inputName = computed((): string => {
