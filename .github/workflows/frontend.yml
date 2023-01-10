@@ -86,18 +86,11 @@ jobs:
           message: "The Frontend project has been built and it's ready to deploy 🚀"
 
   build-publish-docker:
-    needs: build-application
+    #needs: build-application
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Get Tag
-        id: tag
-        run: echo "tag=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
-
-      - name: Check output
-        run: echo ${{ steps.tag.outputs.tag }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -118,7 +111,7 @@ jobs:
           context: ./frontend/.
           push: true
           build-args: |
-            VERSION=${{ steps.tag.outputs.tag }}
+            VERSION=$GITHUB_REF_NAME
           tags: michelprogram/clean-your-twitter-web:latest
 
   deploy-api:

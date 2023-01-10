@@ -5,8 +5,8 @@
         <p class="title">Select</p>
         <div class="select-container">
           <div class="inputs">
-            <Input title="From" data="" disabled="true" />
-            <Input title="To" data="" disabled="true" />
+            <Input title="From" disabled="true" />
+            <Input title="To" disabled="true" />
           </div>
         </div>
         <Button
@@ -31,7 +31,7 @@
             <div class="filter">
               <p class="sub-title">Filters</p>
               <div class="inputs">
-                <Input title="Words" data="" :input-event="filterTweets" />
+                <Input title="Words" v-model="filter" />
               </div>
               <Button
                 text="Apply"
@@ -42,10 +42,11 @@
             </div>
             <div class="tweets">
               <Tweet
-                v-for="(tweet, i) in copyTweets"
+                v-for="(tweet, i) in filterTweets"
                 :key="i"
                 :tweet="tweet"
                 :user="user"
+                :deleted="true"
               />
             </div>
             <div class="info">
@@ -59,6 +60,10 @@
         </div>
       </div>
       <div class="clean-info">
+        <p>
+          {{ countTweetsDeleted }} tweets will be deleted on {{ totalTweets }}
+        </p>
+        <p>That represent : {{ pollution }} gram{{ plurals }} of CO2</p>
         <Button text="Clean" :action="() => {}" :fill="true" />
       </div>
     </div>
@@ -83,24 +88,40 @@ import { User } from "@/types/store";
 const user = useUserStore() as User;
 
 const finded = ref(false);
+const totalTweets = ref(0);
+const pollutionTweet = 0.02;
+
+const filter = ref("");
 
 const tweets = ref<Array<typedTweet>>([]);
 
-const copyTweets = ref<Array<typedTweet>>([]);
-
 onMounted(async () => {
   tweets.value = await BackendApi.tweets();
-  copyTweets.value = tweets.value;
+  totalTweets.value = tweets.value.length;
   finded.value = true;
 });
 
-const filterTweets = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  const value = target.value.toLowerCase();
-  copyTweets.value = tweets.value.filter((tweet: any) =>
-    tweet.text.toLowerCase().includes(value)
-  );
+const deletedTweets = () => {
+  return tweets.value.filter((t) => t.deleted);
 };
+
+const filterTweets = computed(() => {
+  return tweets.value.filter((tweet: typedTweet) =>
+    tweet.text.toLowerCase().includes(filter.value.toLowerCase())
+  );
+});
+
+const countTweetsDeleted = computed((): number => {
+  return deletedTweets().length;
+});
+
+const pollution = computed((): number => {
+  return deletedTweets().length * pollutionTweet;
+});
+
+const plurals = computed((): string => {
+  return pollution.value > 1 ? "s" : "";
+});
 </script>
 
 <style lang="scss" scoped>
@@ -181,9 +202,13 @@ const filterTweets = (event: Event) => {
     margin: 1em;
   }
 
+  .find-tweets {
+    width: 80%;
+    margin: 1em;
+  }
+
   .inputs {
     width: 80%;
-    margin: 0.5em;
 
     div:first-child {
       margin-bottom: 1em;
@@ -272,11 +297,15 @@ const filterTweets = (event: Event) => {
 
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
 
   div {
     font-size: 1.5em;
     width: 10%;
+  }
+
+  p {
+    font-size: 1.2em;
   }
 }
 </style>

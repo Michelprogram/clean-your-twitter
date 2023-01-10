@@ -37,14 +37,13 @@ interface TweetProps {
 
 const props = defineProps<TweetProps>();
 
-const remove = ref(false);
 const link = ref("/images/svg/twitter-green.svg");
 
 const updateLink = () => {
-  remove.value = !remove.value;
-  link.value = remove.value
-    ? "/images/svg/twitter-blue.svg"
-    : "/images/svg/twitter-green.svg";
+  props.tweet.deleted = !props.tweet.deleted;
+  link.value = props.tweet.deleted
+    ? "/images/svg/twitter-green.svg"
+    : "/images/svg/twitter-blue.svg";
 };
 
 const displayDate = computed((): string => {
