@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
 import Button from "@/Components/button.vue";
-import { generateTwitterOAuth } from "~~/api/twitter";
+import { generateTwitterOAuth } from "@/api/twitter";
 const router = useRouter();
 
 const login = (): void => {

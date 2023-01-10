@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"api-clean-twitter/database/repository"
-	"api-clean-twitter/entities"
+	"api-clean-twitter/dao"
 	"api-clean-twitter/jwt"
 	"api-clean-twitter/middleware"
+	"api-clean-twitter/models"
 	"api-clean-twitter/twitter"
 	"encoding/json"
 	"fmt"
@@ -40,7 +40,7 @@ func AuthentificationTwitter(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Get Info for user
-	dataUser, err := twitter.UsersInfo()
+	data, err := twitter.UsersInfo()
 
 	if err != nil {
 		middleware.Write(r, err)
@@ -48,13 +48,15 @@ func AuthentificationTwitter(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := entities.NewUser(dataUser, twitter.Token)
+	metrics := models.NewMetrics(data.Data.PublicMetrics.FollowersCount, data.Data.PublicMetrics.FollowingCount, data.Data.PublicMetrics.TweetCount)
+
+	user := models.NewUser(data.Data.ProfileImageURL, data.Data.Username, data.Data.Name, data.Data.TwitterId, int(0), metrics, twitter.Token)
 
 	//Add or update user depend on twitter id
-	repository.AddUser(*user)
+	dao.AddUser(*user)
 
 	//Generate new JWT
-	jwt, err := jwt.GenerateJWT(user.Profile.Data.TwitterId)
+	jwt, err := jwt.GenerateJWT(user.TwitterId)
 
 	if err != nil {
 		middleware.Write(r, err)
@@ -74,7 +76,7 @@ func AuthentificationBackend(w http.ResponseWriter, r *http.Request) {
 	twitter_id := w.Header().Get("twitter_id")
 
 	//Looking for user in database
-	user, err := repository.GetImageUserById(twitter_id)
+	user, err := dao.GetImageUserById(twitter_id)
 
 	if err != nil {
 		fmt.Fprintf(w, "%s", err.Error())
@@ -98,7 +100,7 @@ func Find10LastTweet(w http.ResponseWriter, r *http.Request) {
 	twitter_id := w.Header().Get("twitter_id")
 
 	//Looking for user in database
-	user, err := repository.GetUserByTwitterId(twitter_id)
+	user, err := dao.GetUserByTwitterId(twitter_id)
 
 	if err != nil {
 		fmt.Fprintf(w, "%s", err.Error())
@@ -107,7 +109,7 @@ func Find10LastTweet(w http.ResponseWriter, r *http.Request) {
 
 	twitter_api, _ := twitter.NewTwitter()
 
-	twitter_api.SetToken(user.User.Token)
+	twitter_api.SetToken(user.Token)
 
 	res, err := twitter_api.GetTweets(10, twitter_id)
 

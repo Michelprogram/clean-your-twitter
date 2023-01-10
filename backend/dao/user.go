@@ -1,9 +1,8 @@
-package repository
+package dao
 
 import (
 	"api-clean-twitter/database"
-	"api-clean-twitter/entities"
-	"api-clean-twitter/twitter"
+	"api-clean-twitter/models"
 	"context"
 	"errors"
 
@@ -14,11 +13,11 @@ import (
 
 var ctx = context.TODO()
 
-func AddUser(user entities.User) (*mongo.UpdateResult, error) {
+func AddUser(user models.User) (*mongo.UpdateResult, error) {
 	var client = database.ClientDB
 
 	filter := bson.M{
-		"user.profile.data.twitter_id": user.Profile.Data.TwitterId,
+		"user.twitter_id": user.TwitterId,
 	}
 
 	update := bson.M{
@@ -42,7 +41,7 @@ func DeleteUserByTwitterId(twitter_id string) (*mongo.DeleteResult, error) {
 	var client = database.ClientDB
 
 	filter := bson.M{
-		"user.profile.data.twitter_id": twitter_id,
+		"user.twitter_id": twitter_id,
 	}
 
 	res, err := client.Collection.DeleteOne(ctx, filter, nil, nil)
@@ -54,13 +53,13 @@ func DeleteUserByTwitterId(twitter_id string) (*mongo.DeleteResult, error) {
 	return res, nil
 }
 
-func GetUserByTwitterId(twitter_id string) (*entities.UserMongo, error) {
+func GetUserByTwitterId(twitter_id string) (*models.User, error) {
 	var client = database.ClientDB
 
 	filter := bson.M{
-		"user.profile.data.twitter_id": twitter_id,
+		"user.twitter_id": twitter_id,
 	}
-	var user entities.UserMongo
+	var user models.UserMongo
 
 	err := client.Collection.FindOne(ctx, filter, nil).Decode(&user)
 
@@ -71,24 +70,23 @@ func GetUserByTwitterId(twitter_id string) (*entities.UserMongo, error) {
 		return nil, err
 	}
 
-	return &user, nil
+	return &user.User, nil
 }
 
-func GetImageUserById(twitter_id string) (*entities.UserMongo, error) {
+func GetImageUserById(twitter_id string) (*models.User, error) {
 	var client = database.ClientDB
+	var user models.UserMongo
 
 	filter := bson.M{
-		"user.profile.data.twitter_id": twitter_id,
+		"user.twitter_id": twitter_id,
 	}
 
 	opts := options.FindOne().SetProjection(bson.M{
-		"user.profile.data.profile_image_url": 1,
-		"user.profile.data.username":          1,
-		"user.profile.data.name":              1,
-		"_id":                                 0,
+		"user.profile_image_url": 1,
+		"user.username":          1,
+		"user.name":              1,
+		"_id":                    0,
 	})
-
-	var user entities.UserMongo
 
 	err := client.Collection.FindOne(ctx, filter, opts).Decode(&user)
 
@@ -99,20 +97,21 @@ func GetImageUserById(twitter_id string) (*entities.UserMongo, error) {
 		return nil, err
 	}
 
-	return &user, nil
+	return &user.User, nil
 
 }
 
-func UpdateTokenUser(twitter_id string, new_token *twitter.Token) (*mongo.UpdateResult, error) {
+func UpdateTokenUser(access_token, refresh_token, old_access_token string) (*mongo.UpdateResult, error) {
 	var client = database.ClientDB
 
 	filter := bson.M{
-		"user.profile.data.twitter_id": twitter_id,
+		"user.token.access_token": old_access_token,
 	}
 
 	update := bson.M{
 		"$set": bson.M{
-			"user.token": new_token,
+			"user.token.access_token":  access_token,
+			"user.token.refresh_token": refresh_token,
 		},
 	}
 

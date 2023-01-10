@@ -101,6 +101,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      #Passer sous canister pour avoir deux répôts privé
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
@@ -123,7 +124,7 @@ jobs:
           script: |
             docker stop twitter-web && docker container rm twitter-web && true
             docker pull michelprogram/clean-your-twitter-web:latest
-            docker container run -d --name twitter-web -p 3000:3000 michelprogram/clean-your-twitter-web
+            docker container run -d --name twitter-web -p 80:3000 michelprogram/clean-your-twitter-web
 
   discord-deploy:
     needs: deploy-api

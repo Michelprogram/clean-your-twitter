@@ -29,18 +29,13 @@
 <script setup lang="ts">
 import { Tweet } from "@/types/api";
 import { User } from "@/types/store";
-import { PropType } from "vue";
 
-const props = defineProps({
-  user: {
-    type: Object as PropType<User>,
-    required: true,
-  },
-  tweet: {
-    type: Object as PropType<Tweet>,
-    required: true,
-  },
-});
+interface TweetProps {
+  user: User;
+  tweet: Tweet;
+}
+
+const props = defineProps<TweetProps>();
 
 const remove = ref(false);
 const link = ref("/images/svg/twitter-green.svg");
@@ -67,9 +62,12 @@ const displayDate = computed((): string => {
 });
 
 const tweetLink = computed((): string => {
-  const urls = props.tweet.entities.urls;
-  if (urls != undefined) return urls[0];
-  return `https://twitter.com/${props.user.pseudo}/status/${props.tweet.id}`;
+  if (
+    props.tweet.entities == undefined ||
+    props.tweet.entities.urls == undefined
+  )
+    return `https://twitter.com/${props.user.username}/status/${props.tweet.id}`;
+  return props.tweet.entities.urls[0];
 });
 </script>
 
