@@ -34,6 +34,9 @@ export default class BackendApi {
 
     const json = await request.json();
 
-    return json.data;
+    return [...json.data].map((el) => {
+      el.deleted = true;
+      return el;
+    });
   };
 }

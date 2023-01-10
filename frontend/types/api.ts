@@ -15,5 +15,6 @@ export type Tweet = {
     urls: [url: string];
   };
   id: string;
+  deleted: boolean;
 };
 //
