@@ -3,16 +3,18 @@
     <div class="dashboard">
       <div class="select-date">
         <p class="title">Select</p>
-        <div class="inputs">
-          <Input title="From" data="" disabled="true" />
-          <Input title="To" data="" disabled="true" />
-        </div>
-        <p class="sub-title">Suggestions</p>
-        <div class="info">
-          <p class="suggestion">
-            Most of your tweets are behind <span id="start"></span> and
-            <span id="end"></span>
-          </p>
+        <div>
+          <div class="inputs">
+            <Input title="From" data="" disabled="true" />
+            <Input title="To" data="" disabled="true" />
+          </div>
+          <p class="sub-title">Suggestions</p>
+          <div class="info">
+            <p class="suggestion">
+              Most of your tweets are behind <span id="start"></span> and
+              <span id="end"></span>
+            </p>
+          </div>
         </div>
         <Button
           text="Find tweets"
@@ -185,6 +187,7 @@ const filterTweets = (event: Event) => {
 
   .inputs {
     width: 80%;
+    margin: 0.5em;
 
     div:first-child {
       margin-bottom: 1em;
@@ -260,7 +263,8 @@ const filterTweets = (event: Event) => {
         grid-area: 3 / 1 / 4 / 5;
 
         p:not(span) {
-          font-size: 1.5em;
+          font-size: 1em;
+          font-weight: 600;
         }
       }
     }

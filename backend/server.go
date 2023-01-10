@@ -43,7 +43,11 @@ func main() {
 	backend_routes.HandleFunc("/tweets", h.Find10LastTweet).Methods("GET")
 
 	//Ping server
-	router.HandleFunc("/ping", h.Test).Methods("GET")
+	test_routes := router.PathPrefix("/test").Subrouter()
+	test_routes.Use(m.AuthBackend)
+
+	test_routes.HandleFunc("/", h.TestCode).Methods("GET")
+	test_routes.HandleFunc("/ping", h.Test).Methods("GET")
 
 	//router.NotFoundHandler = handlers.ErrorRoute()
 	c := cors.New(cors.Options{

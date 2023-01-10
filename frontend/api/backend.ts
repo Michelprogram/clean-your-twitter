@@ -16,12 +16,10 @@ export default class BackendApi {
 
     const json = await request.json();
 
-    const user = json.user.profile.data;
-
     const res: User = {
-      picture: user.profile_image_url,
-      username: user.username,
-      pseudo: user.name,
+      picture: json.profile_image_url,
+      username: json.username,
+      pseudo: json.name,
     };
 
     return res;
@@ -35,8 +33,6 @@ export default class BackendApi {
     });
 
     const json = await request.json();
-
-    console.log(json.data);
 
     return json.data;
   };

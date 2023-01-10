@@ -1,6 +1,7 @@
 package twitter
 
 import (
+	"api-clean-twitter/models"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -10,7 +11,7 @@ import (
 var token_url string = "https://api.twitter.com/2/oauth2/token"
 
 func (twitter *Twitter) GenerateToken(code string) error {
-	var token Token = Token{}
+	var token models.Token = models.Token{}
 
 	data := url.Values{}
 
@@ -20,13 +21,17 @@ func (twitter *Twitter) GenerateToken(code string) error {
 	data.Set("redirect_uri", twitter.RedirectUri)
 	data.Set("code_verifier", "8KxxO-RPl0bLSxX5AWwgdiFbMnry_VOKzFeIlVA7NoA")
 
-	body, err := postHTTP(data, token_url, twitter)
+	req := NewRequest(token_url, *twitter, data)
+
+	body, err := req.PostHTTP()
 
 	if err != nil {
 		return err
 	}
 
 	json.Unmarshal([]byte(body), &token)
+
+	token.ConvertToTime()
 
 	twitter.SetToken(&token)
 
@@ -34,22 +39,24 @@ func (twitter *Twitter) GenerateToken(code string) error {
 }
 
 func (twitter *Twitter) RefreshToken() error {
-	var token Token = Token{}
+	var token models.Token = models.Token{}
 
 	data := url.Values{}
 
 	data.Set("refresh_token", twitter.Token.Refresh)
 	data.Set("grant_type", "refresh_token")
 
-	body, err := postHTTP(data, token_url, twitter)
+	req := NewRequest(token_url, *twitter, data)
+
+	body, err := req.PostHTTP()
 
 	if err != nil {
 		return err
 	}
 
-	fmt.Println(body)
-
 	json.Unmarshal([]byte(body), &token)
+
+	token.ConvertToTime()
 
 	twitter.SetToken(&token)
 
@@ -61,7 +68,9 @@ func (twitter Twitter) UsersInfo() (*DataUser, error) {
 
 	var user DataUser
 
-	body, err := getHTTP(user_info, &twitter)
+	req := NewRequest(user_info, twitter, nil)
+
+	body, err := req.GetHTTP()
 
 	if err != nil {
 		return nil, err
@@ -79,8 +88,10 @@ func (twitter Twitter) GetTweets(n int, twitter_id string) (any, error) {
 		return nil, errors.New("number should be between 1 and 100")
 	}
 
-	var path string = fmt.Sprintf("https://api.twitter.com/2/users/%s/tweets?max_results=10&tweet.fields=created_at%%2Centities", twitter_id)
-	body, err := getHTTP(path, &twitter)
+	var url string = fmt.Sprintf("https://api.twitter.com/2/users/%s/tweets?max_results=10&tweet.fields=created_at%%2Centities", twitter_id)
+	req := NewRequest(url, twitter, nil)
+
+	body, err := req.GetHTTP()
 
 	if err != nil {
 		return nil, err
