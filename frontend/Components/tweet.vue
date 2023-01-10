@@ -33,6 +33,7 @@ import { User } from "@/types/store";
 interface TweetProps {
   user: User;
   tweet: Tweet;
+  deleted: boolean;
 }
 
 const props = defineProps<TweetProps>();
