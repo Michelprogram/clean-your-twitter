@@ -1,5 +1,11 @@
 FROM node:18-alpine3.16
 
+#Version from the tag
+ARG VERSION
+
+ENV VERSION ${VERSION}
+
+
 WORKDIR /app
 
 ADD . ./
