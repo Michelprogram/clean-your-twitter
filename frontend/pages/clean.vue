@@ -3,17 +3,10 @@
     <div class="dashboard">
       <div class="select-date">
         <p class="title">Select</p>
-        <div>
+        <div class="select-container">
           <div class="inputs">
             <Input title="From" data="" disabled="true" />
             <Input title="To" data="" disabled="true" />
-          </div>
-          <p class="sub-title">Suggestions</p>
-          <div class="info">
-            <p class="suggestion">
-              Most of your tweets are behind <span id="start"></span> and
-              <span id="end"></span>
-            </p>
           </div>
         </div>
         <Button
@@ -182,8 +175,11 @@ const filterTweets = (event: Event) => {
   height: 70vh;
   display: flex;
   flex-direction: column;
-  align-items: baseline;
   row-gap: 1em;
+
+  .select-container {
+    margin: 1em;
+  }
 
   .inputs {
     width: 80%;

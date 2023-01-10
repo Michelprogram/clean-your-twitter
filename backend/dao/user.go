@@ -101,7 +101,7 @@ func GetImageUserById(twitter_id string) (*models.User, error) {
 
 }
 
-func UpdateTokenUser(access_token, refresh_token, old_access_token string) (*mongo.UpdateResult, error) {
+func UpdateTokenUser(new_token models.Token, old_access_token string) (*mongo.UpdateResult, error) {
 	var client = database.ClientDB
 
 	filter := bson.M{
@@ -110,8 +110,7 @@ func UpdateTokenUser(access_token, refresh_token, old_access_token string) (*mon
 
 	update := bson.M{
 		"$set": bson.M{
-			"user.token.access_token":  access_token,
-			"user.token.refresh_token": refresh_token,
+			"user.token": new_token,
 		},
 	}
 

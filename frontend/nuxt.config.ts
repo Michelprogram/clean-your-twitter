@@ -2,6 +2,11 @@
 const nuxtConfig = defineNuxtConfig({
   modules: ["@pinia/nuxt"],
   css: ["@/assets/scss/main.scss"],
+  runtimeConfig: {
+    public: {
+      version: process.env.VERSION,
+    },
+  },
   vite: {
     css: {
       preprocessorOptions: {

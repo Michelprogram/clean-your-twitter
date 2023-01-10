@@ -35,11 +35,11 @@ func (r Request) createBearerString() string {
 	return fmt.Sprintf("Bearer %s", r.twitter.Token.Access)
 }
 
-func (r Request) isTokenValid() (bool, error) {
+func (r *Request) isTokenValid() (bool, error) {
 
 	if !r.twitter.Token.IsValid() && r.url != "https://api.twitter.com/2/oauth2/token" {
 
-		old_token := *r.twitter.Token
+		old_token := r.twitter.Token
 
 		err := r.twitter.RefreshToken()
 
@@ -47,7 +47,7 @@ func (r Request) isTokenValid() (bool, error) {
 			return false, err
 		}
 
-		dao.UpdateTokenUser(r.twitter.Token.Access, r.twitter.Token.Refresh, old_token.Access)
+		dao.UpdateTokenUser(*r.twitter.Token, old_token.Access)
 
 		return false, err
 	}
@@ -56,7 +56,7 @@ func (r Request) isTokenValid() (bool, error) {
 
 }
 
-func (r Request) GetHTTP() (string, error) {
+func (r *Request) GetHTTP() (string, error) {
 
 	var err error
 
