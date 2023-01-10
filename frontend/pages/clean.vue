@@ -46,6 +46,7 @@
                 :key="i"
                 :tweet="tweet"
                 :user="user"
+                :deleted="true"
               />
             </div>
             <div class="info">
@@ -59,6 +60,7 @@
         </div>
       </div>
       <div class="clean-info">
+        <p>{{ countTweetsDeleted }} tweets will be deleted</p>
         <Button text="Clean" :action="() => {}" :fill="true" />
       </div>
     </div>
@@ -101,6 +103,10 @@ const filterTweets = (event: Event) => {
     tweet.text.toLowerCase().includes(value)
   );
 };
+
+const countTweetsDeleted = computed((): number => {
+  return tweets.value.filter((t) => t.deleted).length;
+});
 </script>
 
 <style lang="scss" scoped>
@@ -181,9 +187,13 @@ const filterTweets = (event: Event) => {
     margin: 1em;
   }
 
+  .find-tweets {
+    width: 80%;
+    margin: 1em;
+  }
+
   .inputs {
     width: 80%;
-    margin: 0.5em;
 
     div:first-child {
       margin-bottom: 1em;
