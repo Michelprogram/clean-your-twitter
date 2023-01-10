@@ -181,9 +181,13 @@ const filterTweets = (event: Event) => {
     margin: 1em;
   }
 
+  .find-tweets {
+    width: 80%;
+    margin: 1em;
+  }
+
   .inputs {
     width: 80%;
-    margin: 0.5em;
 
     div:first-child {
       margin-bottom: 1em;
