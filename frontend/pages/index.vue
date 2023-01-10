@@ -7,7 +7,7 @@
         and do your part in the fight against climate change..
       </p>
       <div class="btns">
-        <Button text="Connect" :action="login" :fill="true" />
+        <Button v-if="!isLogged" text="Connect" :action="login" :fill="true" />
         <Button text="Learn More" :action="about" :fill="false" />
       </div>
     </div>
@@ -43,7 +43,11 @@
 <script setup lang="ts">
 import Button from "@/Components/button.vue";
 import { generateTwitterOAuth } from "@/api/twitter";
+import { useUserStore } from "@/store/user";
+
 const router = useRouter();
+
+const user = useUserStore();
 
 const login = (): void => {
   location.href = generateTwitterOAuth();
@@ -52,6 +56,10 @@ const login = (): void => {
 const about = (): void => {
   router.push("/about");
 };
+
+const isLogged = computed((): boolean => {
+  return user.username != undefined;
+});
 </script>
 
 <style lang="scss" scoped>
