@@ -24,35 +24,37 @@
         </div>
 
         <div class="content">
-          <div v-if="finded == 0" class="waiting">
-            <p>Waiting to choose dates ...</p>
-            <img src="/images/svg/waiting.svg" alt="" />
-          </div>
-          <Loader v-else-if="finded == 1" />
-          <div v-else-if="finded == 2" class="dashboard-preview">
-            <div class="filter">
-              <p class="sub-title">Filters</p>
-              <div class="inputs">
-                <Input title="Words" v-model="filter" />
+          <transition name="fade" mode="out-in">
+            <div v-if="finded == 0" class="waiting">
+              <p>Waiting to choose dates ...</p>
+              <img src="/images/svg/waiting.svg" alt="" />
+            </div>
+            <Loader v-else-if="finded == 1" />
+            <div v-else-if="finded == 2" class="dashboard-preview">
+              <div class="filter">
+                <p class="sub-title">Filters</p>
+                <div class="inputs">
+                  <Input title="Words" v-model="filter" />
+                </div>
+              </div>
+              <div class="tweets">
+                <Tweet
+                  v-for="(tweet, i) in filterTweets"
+                  :key="i"
+                  :tweet="tweet"
+                  :user="user"
+                  :deleted="true"
+                />
+              </div>
+              <div class="info">
+                <p>
+                  <span class="sub-title">Info :</span>By default all tweets
+                  with green bird will be remove, you can select which tweets to
+                  keep by clicking on birds.
+                </p>
               </div>
             </div>
-            <div class="tweets">
-              <Tweet
-                v-for="(tweet, i) in filterTweets"
-                :key="i"
-                :tweet="tweet"
-                :user="user"
-                :deleted="true"
-              />
-            </div>
-            <div class="info">
-              <p>
-                <span class="sub-title">Info :</span>By default all tweets with
-                green bird will be remove, you can select which tweets to keep
-                by clicking on birds.
-              </p>
-            </div>
-          </div>
+          </transition>
         </div>
       </div>
       <div class="clean-info">
@@ -132,6 +134,15 @@ const findTweets = computed(async () => {
 <style lang="scss" scoped>
 @forward "@/assets/scss/variables/fonts";
 @import "@/assets/scss/colors";
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
 
 .container {
   overflow: hidden;
