@@ -24,11 +24,12 @@
         </div>
 
         <div class="content">
-          <div v-if="!finded" class="waiting">
+          <div v-if="finded == 0" class="waiting">
             <p>Waiting to choose dates ...</p>
             <img src="/images/svg/waiting.svg" alt="" />
           </div>
-          <div v-else class="dashboard-preview">
+          <Loader v-else-if="finded == 1" />
+          <div v-else-if="finded == 2" class="dashboard-preview">
             <div class="filter">
               <p class="sub-title">Filters</p>
               <div class="inputs">
@@ -75,15 +76,15 @@
 import Input from "@/Components/input.vue";
 import Button from "@/Components/button.vue";
 import Tweet from "@/Components/tweet.vue";
+import Loader from "@/Components/loader.vue";
 import BackendApi from "@/api/backend";
 import { useUserStore } from "@/store/user";
 import { Tweet as typedTweet } from "@/types/api";
 import { User } from "@/types/store";
-import { start } from "repl";
 
 const user = useUserStore() as User;
 
-const finded = ref(false);
+const finded = ref(0);
 const totalTweets = ref(0);
 const pollutionTweet = 0.02;
 
@@ -120,9 +121,10 @@ const findTweets = computed(async () => {
   console.log(regex);
   const [start, end] = [startDate.value, endDate.value];
   if (start.match(regex) || end.match(regex)) {
+    finded.value = 1;
     tweets.value = await BackendApi.tweets();
     totalTweets.value = tweets.value.length;
-    finded.value = true;
+    finded.value = 2;
   }
 });
 </script>
@@ -239,6 +241,7 @@ const findTweets = computed(async () => {
   }
 
   .content {
+    height: 100%;
     .waiting {
       display: flex;
       justify-content: center;
