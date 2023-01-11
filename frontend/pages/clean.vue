@@ -5,13 +5,14 @@
         <p class="title">Select</p>
         <div class="select-container">
           <div class="inputs">
-            <Input title="From" disabled="true" />
-            <Input title="To" disabled="true" />
+            <Input title="From" v-model="startDate" />
+            <Input title="To" v-model="endDate" />
           </div>
+          <p class="format-date">Format : YYYY/MM/DD</p>
         </div>
         <Button
           text="Find tweets"
-          :action="() => {}"
+          :action="() => findTweets"
           :fill="true"
           class="find-tweets"
         />
@@ -33,12 +34,6 @@
               <div class="inputs">
                 <Input title="Words" v-model="filter" />
               </div>
-              <Button
-                text="Apply"
-                :action="() => {}"
-                :fill="true"
-                class="apply"
-              />
             </div>
             <div class="tweets">
               <Tweet
@@ -84,6 +79,7 @@ import BackendApi from "@/api/backend";
 import { useUserStore } from "@/store/user";
 import { Tweet as typedTweet } from "@/types/api";
 import { User } from "@/types/store";
+import { start } from "repl";
 
 const user = useUserStore() as User;
 
@@ -92,14 +88,10 @@ const totalTweets = ref(0);
 const pollutionTweet = 0.02;
 
 const filter = ref("");
+const startDate = ref("2022/03/10");
+const endDate = ref("2022/03/10");
 
 const tweets = ref<Array<typedTweet>>([]);
-
-onMounted(async () => {
-  tweets.value = await BackendApi.tweets();
-  totalTweets.value = tweets.value.length;
-  finded.value = true;
-});
 
 const deletedTweets = () => {
   return tweets.value.filter((t) => t.deleted);
@@ -121,6 +113,17 @@ const pollution = computed((): number => {
 
 const plurals = computed((): string => {
   return pollution.value > 1 ? "s" : "";
+});
+
+const findTweets = computed(async () => {
+  const regex = /\d{4}\/\d{2}\/\d{2}/gm;
+  console.log(regex);
+  const [start, end] = [startDate.value, endDate.value];
+  if (start.match(regex) || end.match(regex)) {
+    tweets.value = await BackendApi.tweets();
+    totalTweets.value = tweets.value.length;
+    finded.value = true;
+  }
 });
 </script>
 
@@ -200,6 +203,12 @@ const plurals = computed((): string => {
 
   .select-container {
     margin: 1em;
+
+    .format-date {
+      font-size: 1vw;
+      margin-top: 1em;
+      font-style: italic;
+    }
   }
 
   .find-tweets {
