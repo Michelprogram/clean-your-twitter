@@ -25,16 +25,23 @@ export default class BackendApi {
     return res;
   };
 
-  static tweets = async (): Promise<Array<Tweet>> => {
+  static tweets = async (
+    dateStart: string,
+    dateEnd: string
+  ): Promise<Array<Tweet>> => {
     const url = apiEndpoint + "/backend/tweets";
+
+    const [start, end] = [new Date(dateStart), new Date(dateEnd)];
 
     const request = await fetch(url, {
       credentials: "include",
+      method: "POST",
+      body: JSON.stringify({ date_start: start, date_end: end }),
     });
 
     const json = await request.json();
 
-    return [...json.data].map((el) => {
+    return json.map((el: Tweet) => {
       el.deleted = true;
       return el;
     });

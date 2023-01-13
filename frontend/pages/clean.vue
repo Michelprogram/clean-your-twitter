@@ -48,9 +48,8 @@
               </div>
               <div class="info">
                 <p>
-                  <span class="sub-title">Info :</span>By default all tweets
-                  with green bird will be remove, you can select which tweets to
-                  keep by clicking on birds.
+                  By default all tweets with green bird will be remove, you can
+                  select which tweets to keep by clicking on birds.
                 </p>
               </div>
             </div>
@@ -91,8 +90,8 @@ const totalTweets = ref(0);
 const pollutionTweet = 0.02;
 
 const filter = ref("");
-const startDate = ref("2022/03/10");
-const endDate = ref("2022/03/10");
+const startDate = ref("2022/01/21");
+const endDate = ref("2023/01/01");
 
 const tweets = ref<Array<typedTweet>>([]);
 
@@ -120,11 +119,10 @@ const plurals = computed((): string => {
 
 const findTweets = computed(async () => {
   const regex = /\d{4}\/\d{2}\/\d{2}/gm;
-  console.log(regex);
   const [start, end] = [startDate.value, endDate.value];
   if (start.match(regex) || end.match(regex)) {
     finded.value = 1;
-    tweets.value = await BackendApi.tweets();
+    tweets.value = await BackendApi.tweets(start, end);
     totalTweets.value = tweets.value.length;
     finded.value = 2;
   }

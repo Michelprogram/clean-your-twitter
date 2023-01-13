@@ -95,9 +95,20 @@ func AuthentificationBackend(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%s", data)
 }
 
-func Find10LastTweet(w http.ResponseWriter, r *http.Request) {
+func FindTweetsBetweenDates(w http.ResponseWriter, r *http.Request) {
+
+	var dates models.Dates
 
 	twitter_id := w.Header().Get("twitter_id")
+
+	decoder := json.NewDecoder(r.Body)
+
+	if err := decoder.Decode(&dates); err != nil {
+		fmt.Fprintf(w, "%s", err.Error())
+		return
+	}
+
+	defer r.Body.Close()
 
 	//Looking for user in database
 	user, err := dao.GetUserByTwitterId(twitter_id)
@@ -111,12 +122,19 @@ func Find10LastTweet(w http.ResponseWriter, r *http.Request) {
 
 	twitter_api.SetToken(user.Token)
 
-	res, err := twitter_api.GetTweets(10, twitter_id)
+	res, err := twitter_api.GetTweetsBetweenDates(dates, twitter_id)
 
 	if err != nil {
 		fmt.Fprintf(w, "%s", err.Error())
 		return
 	}
 
-	fmt.Fprintf(w, "%s", res)
+	data, err := json.Marshal(res)
+
+	if err != nil {
+		fmt.Fprintf(w, "%s", err.Error())
+		return
+	}
+
+	fmt.Fprintf(w, "%s", data)
 }

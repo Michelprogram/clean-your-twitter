@@ -40,7 +40,7 @@ func main() {
 	backend_routes.Use(m.AuthBackend)
 
 	backend_routes.HandleFunc("/auth", h.AuthentificationBackend).Methods("GET")
-	backend_routes.HandleFunc("/tweets", h.Find10LastTweet).Methods("GET")
+	backend_routes.HandleFunc("/tweets", h.FindTweetsBetweenDates).Methods("POST")
 
 	//Ping server
 	test_routes := router.PathPrefix("/test").Subrouter()
