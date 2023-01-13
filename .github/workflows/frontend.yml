@@ -111,7 +111,7 @@ jobs:
           context: ./frontend/.
           push: true
           build-args: |
-            VERSION=${{ GITHUB_REF_NAME }}
+            VERSION="1.0.4"
           tags: michelprogram/clean-your-twitter-web:latest
 
   deploy-api:
