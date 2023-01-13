@@ -11,10 +11,6 @@ export type OAuthParameters = {
 export type Tweet = {
   text: string;
   created_at: string;
-  entities: {
-    urls: [url: string];
-  };
   id: string;
   deleted: boolean;
 };
-//

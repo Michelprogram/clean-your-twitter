@@ -3,7 +3,6 @@ package twitter
 import (
 	"api-clean-twitter/models"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/url"
 )
@@ -82,21 +81,41 @@ func (twitter Twitter) UsersInfo() (*DataUser, error) {
 
 }
 
-func (twitter Twitter) GetTweets(n int, twitter_id string) (any, error) {
+// TODO : A faire en fonction recursive
+func (twitter Twitter) GetTweetsBetweenDates(dates models.Dates, twitter_id string) ([]*models.InfoTweet, error) {
 
-	if n <= 0 || n > 100 {
-		return nil, errors.New("number should be between 1 and 100")
+	var flag bool = true
+	var url string = ""
+	var next_token string = ""
+	var data []*models.InfoTweet
+
+	for flag {
+		var tweet models.Tweet
+		url = fmt.Sprintf("https://api.twitter.com/2/users/%s/tweets?max_results=100&tweet.fields=created_at%%2Centities&exclude=retweets&start_time=%s&end_time=%s", twitter_id, dates.Start, dates.End)
+
+		if next_token != "" {
+			url = fmt.Sprintf("%s&=pagination_token=%s", url, next_token)
+		}
+
+		req := NewRequest(url, twitter, nil)
+
+		body, err := req.GetHTTP()
+
+		if err != nil {
+			return nil, err
+		}
+
+		json.Unmarshal([]byte(body), &tweet)
+
+		data = append(data, tweet.Data...)
+
+		if tweet.Meta.NextToken != "" {
+			next_token = tweet.Meta.NextToken
+		} else {
+			flag = false
+		}
 	}
 
-	var url string = fmt.Sprintf("https://api.twitter.com/2/users/%s/tweets?max_results=10&tweet.fields=created_at%%2Centities", twitter_id)
-	req := NewRequest(url, twitter, nil)
-
-	body, err := req.GetHTTP()
-
-	if err != nil {
-		return nil, err
-	}
-
-	return body, nil
+	return data, nil
 
 }

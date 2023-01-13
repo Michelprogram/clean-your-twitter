@@ -5,13 +5,14 @@
         <p class="title">Select</p>
         <div class="select-container">
           <div class="inputs">
-            <Input title="From" disabled="true" />
-            <Input title="To" disabled="true" />
+            <Input title="From" v-model="startDate" />
+            <Input title="To" v-model="endDate" />
           </div>
+          <p class="format-date">Format : YYYY/MM/DD</p>
         </div>
         <Button
           text="Find tweets"
-          :action="() => {}"
+          :action="() => findTweets"
           :fill="true"
           class="find-tweets"
         />
@@ -23,40 +24,36 @@
         </div>
 
         <div class="content">
-          <div v-if="!finded" class="waiting">
-            <p>Waiting to choose dates ...</p>
-            <img src="/images/svg/waiting.svg" alt="" />
-          </div>
-          <div v-else class="dashboard-preview">
-            <div class="filter">
-              <p class="sub-title">Filters</p>
-              <div class="inputs">
-                <Input title="Words" v-model="filter" />
+          <transition name="fade" mode="out-in">
+            <div v-if="finded == 0" class="waiting">
+              <p>Waiting to choose dates ...</p>
+              <img src="/images/svg/waiting.svg" alt="" />
+            </div>
+            <Loader v-else-if="finded == 1" />
+            <div v-else-if="finded == 2" class="dashboard-preview">
+              <div class="filter">
+                <p class="sub-title">Filters</p>
+                <div class="inputs">
+                  <Input title="Words" v-model="filter" />
+                </div>
               </div>
-              <Button
-                text="Apply"
-                :action="() => {}"
-                :fill="true"
-                class="apply"
-              />
+              <div class="tweets">
+                <Tweet
+                  v-for="(tweet, i) in filterTweets"
+                  :key="i"
+                  :tweet="tweet"
+                  :user="user"
+                  :deleted="true"
+                />
+              </div>
+              <div class="info">
+                <p>
+                  By default all tweets with green bird will be remove, you can
+                  select which tweets to keep by clicking on birds.
+                </p>
+              </div>
             </div>
-            <div class="tweets">
-              <Tweet
-                v-for="(tweet, i) in filterTweets"
-                :key="i"
-                :tweet="tweet"
-                :user="user"
-                :deleted="true"
-              />
-            </div>
-            <div class="info">
-              <p>
-                <span class="sub-title">Info :</span>By default all tweets with
-                green bird will be remove, you can select which tweets to keep
-                by clicking on birds.
-              </p>
-            </div>
-          </div>
+          </transition>
         </div>
       </div>
       <div class="clean-info">
@@ -80,6 +77,7 @@
 import Input from "@/Components/input.vue";
 import Button from "@/Components/button.vue";
 import Tweet from "@/Components/tweet.vue";
+import Loader from "@/Components/loader.vue";
 import BackendApi from "@/api/backend";
 import { useUserStore } from "@/store/user";
 import { Tweet as typedTweet } from "@/types/api";
@@ -87,19 +85,15 @@ import { User } from "@/types/store";
 
 const user = useUserStore() as User;
 
-const finded = ref(false);
+const finded = ref(0);
 const totalTweets = ref(0);
 const pollutionTweet = 0.02;
 
 const filter = ref("");
+const startDate = ref("2022/01/21");
+const endDate = ref("2023/01/01");
 
 const tweets = ref<Array<typedTweet>>([]);
-
-onMounted(async () => {
-  tweets.value = await BackendApi.tweets();
-  totalTweets.value = tweets.value.length;
-  finded.value = true;
-});
 
 const deletedTweets = () => {
   return tweets.value.filter((t) => t.deleted);
@@ -122,11 +116,31 @@ const pollution = computed((): number => {
 const plurals = computed((): string => {
   return pollution.value > 1 ? "s" : "";
 });
+
+const findTweets = computed(async () => {
+  const regex = /\d{4}\/\d{2}\/\d{2}/gm;
+  const [start, end] = [startDate.value, endDate.value];
+  if (start.match(regex) || end.match(regex)) {
+    finded.value = 1;
+    tweets.value = await BackendApi.tweets(start, end);
+    totalTweets.value = tweets.value.length;
+    finded.value = 2;
+  }
+});
 </script>
 
 <style lang="scss" scoped>
 @forward "@/assets/scss/variables/fonts";
 @import "@/assets/scss/colors";
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
 
 .container {
   overflow: hidden;
@@ -200,6 +214,12 @@ const plurals = computed((): string => {
 
   .select-container {
     margin: 1em;
+
+    .format-date {
+      font-size: 1vw;
+      margin-top: 1em;
+      font-style: italic;
+    }
   }
 
   .find-tweets {
@@ -230,6 +250,7 @@ const plurals = computed((): string => {
   }
 
   .content {
+    height: 100%;
     .waiting {
       display: flex;
       justify-content: center;
