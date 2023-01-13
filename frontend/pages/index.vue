@@ -58,7 +58,7 @@ const about = (): void => {
 };
 
 const isLogged = computed((): boolean => {
-  return user.username != undefined;
+  return user.username != "";
 });
 </script>
 
