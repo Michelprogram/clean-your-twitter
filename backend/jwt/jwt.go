@@ -50,5 +50,3 @@ func DecodeJwt(tokenString string) (string, error) {
 	return "", errors.New("incorrect jwt token")
 
 }
-
-//
