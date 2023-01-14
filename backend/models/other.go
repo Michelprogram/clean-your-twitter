@@ -17,6 +17,6 @@ type Meta struct {
 
 type InfoTweet struct {
 	Text       string `json:"text, omitempty"`
-	Id         int    `json:"id, omitempty"`
+	Id         string `json:"id, omitempty"`
 	Created_at string `json:"created_at, omitempty"`
 }

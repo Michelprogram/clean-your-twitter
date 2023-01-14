@@ -62,12 +62,7 @@ const displayDate = computed((): string => {
 });
 
 const tweetLink = computed((): string => {
-  if (
-    props.tweet.entities == undefined ||
-    props.tweet.entities.urls == undefined
-  )
-    return `https://twitter.com/${props.user.username}/status/${props.tweet.id}`;
-  return props.tweet.entities.urls[0];
+  return `https://twitter.com/${props.user.username}/status/${props.tweet.id}`;
 });
 </script>
 
@@ -115,6 +110,8 @@ $size-img: 55px;
     padding: 0 1em;
     font-size: 1.3em;
     font-weight: lighter;
+
+    word-wrap: break-word;
   }
 
   .footer {
