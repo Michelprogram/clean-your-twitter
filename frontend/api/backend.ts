@@ -46,4 +46,18 @@ export default class BackendApi {
       return el;
     });
   };
+
+  static clean = async (tweetsID: Array<string>) => {
+    const url = apiEndpoint + "/backend/clean";
+
+    const request = await fetch(url, {
+      credentials: "include",
+      method: "POST",
+      body: JSON.stringify({ tweets_id: tweetsID }),
+    });
+
+    const json = await request.json();
+
+    return json;
+  };
 }

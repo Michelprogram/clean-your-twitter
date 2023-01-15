@@ -1,11 +1,17 @@
 <template>
   <div class="container-loader">
     <div class="custom-loader"></div>
-    <p>Fetching data ...</p>
+    <p>{{ message }} ...</p>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+type LoaderProps = {
+  message: string;
+};
+
+const props = defineProps<LoaderProps>();
+</script>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/colors.scss";

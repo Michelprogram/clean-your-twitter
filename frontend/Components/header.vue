@@ -9,12 +9,25 @@
         />
       </div>
       <div class="menu">
-        <NuxtLink to="/">Clean your twitter</NuxtLink>
-        <NuxtLink v-if="isConnected" to="/clean">Dashboard</NuxtLink>
-        <NuxtLink to="about">About</NuxtLink>
+        <NuxtLink to="/" class="cursor-text">Clean your twitter</NuxtLink>
+        <NuxtLink v-if="isConnected" to="/clean" class="cursor-text"
+          >Dashboard</NuxtLink
+        >
+        <NuxtLink to="about" class="cursor-text">About</NuxtLink>
       </div>
       <div v-if="isConnected" class="connect">
-        <img class="picture-profile" :src="user.picture" alt="" srcset="" />
+        <div class="images-container">
+          <img
+            class="picture-profile"
+            :src="user.picture"
+            alt="profile picture"
+          />
+          <img
+            class="logout"
+            src="/images/deconnection.png"
+            @click="() => logout"
+          />
+        </div>
       </div>
       <div v-else class="connect">
         <Button class="btn" text="Connect" :action="login" :fill="false" />
@@ -32,11 +45,17 @@ import { useUserStore } from "../store/user";
 
 const cookie = useCookie("token-twitter");
 const url = useRoute();
+const router = useRouter();
 const user = useUserStore();
 
 const login = (): void => {
   location.href = generateTwitterOAuth();
 };
+
+const logout = computed((): void => {
+  cookie.value = "";
+  router.push({ name: "index" });
+});
 
 const isConnected = computed((): boolean => {
   return user.picture != "";
@@ -132,8 +151,33 @@ $size-center: 40%;
       width: fit-content;
     }
 
-    .picture-profile {
-      border-radius: 5px;
+    .images-container {
+      display: flex;
+      position: relative;
+
+      &:hover {
+        .picture-profile {
+          opacity: 0;
+        }
+        .logout {
+          opacity: 1;
+        }
+      }
+
+      .picture-profile,
+      .logout {
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      .picture-profile {
+        border-radius: 5px;
+      }
+      .logout {
+        position: absolute;
+        padding: 0.3em;
+        opacity: 0;
+        cursor: pointer;
+      }
     }
   }
 }

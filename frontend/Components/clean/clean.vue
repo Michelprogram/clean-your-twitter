@@ -2,12 +2,13 @@
   <div class="clean">
     <p>{{ twitter.deleted }} tweets will be deleted on {{ twitter.size }}</p>
     <p>That represent : {{ pollution }} gram{{ plurals }} of CO2</p>
-    <Button text="Clean" :action="() => {}" :fill="true" />
+    <Button text="Clean" :action="() => clean" :fill="true" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useTweetStore } from "@/store/tweets";
+import BackendApi from "@/api/backend";
 
 const twitter = useTweetStore();
 
@@ -17,6 +18,13 @@ const pollution = computed((): number => {
 
 const plurals = computed((): string => {
   return pollution.value > 1 ? "s" : "";
+});
+
+const clean = computed(async () => {
+  const tweets: Array<string> = twitter.idsDeleted;
+  twitter.UpState();
+  await BackendApi.clean(tweets);
+  twitter.UpState();
 });
 </script>
 

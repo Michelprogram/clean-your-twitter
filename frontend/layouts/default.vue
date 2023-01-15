@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Cursor />
     <Header />
     <slot />
     <Footer />
@@ -9,4 +10,5 @@
 <script setup>
 import Header from "@/Components/header.vue";
 import Footer from "@/Components/footer.vue";
+import Cursor from "@/Components/cursor.vue";
 </script>

@@ -25,11 +25,20 @@ export const useTweetStore = defineStore({
     deleted(): number {
       return this.tweets.filter((t) => t.deleted).length;
     },
-    waiting(): boolean {
+    idsDeleted(): Array<string> {
+      return this.tweets.filter((t) => t.deleted).map((t) => t.id);
+    },
+    isWaiting(): boolean {
       return this.state == 0;
     },
-    loader(): boolean {
+    isFetching(): boolean {
       return this.state == 1;
+    },
+    isLookingTweets(): boolean {
+      return this.state == 2;
+    },
+    isDeleting(): boolean {
+      return this.state == 3;
     },
     tweetByWord() {
       return (word: string) => {

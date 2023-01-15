@@ -7,12 +7,12 @@
 
     <div class="content">
       <transition name="fade" mode="out-in">
-        <div v-if="twitter.waiting" class="waiting">
+        <div v-if="twitter.isWaiting" class="waiting">
           <p>Waiting to choose dates ...</p>
           <img src="/images/svg/waiting.svg" alt="" />
         </div>
-        <Loader v-else-if="twitter.loader" />
-        <div v-else class="dashboard-preview">
+        <Loader v-else-if="twitter.isFetching" message="Data fetching" />
+        <div v-else-if="twitter.isLookingTweets" class="dashboard-preview">
           <div class="filter">
             <p class="sub-title">Filters</p>
             <div class="inputs">
@@ -34,6 +34,10 @@
               select which tweets to keep by clicking on birds.
             </p>
           </div>
+        </div>
+        <Loader v-else-if="twitter.isDeleting" message="Tweets deleting" />
+        <div v-else>
+          <p>All your tweets have been deleted.</p>
         </div>
       </transition>
     </div>
