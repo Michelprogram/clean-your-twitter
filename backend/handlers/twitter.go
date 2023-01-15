@@ -95,6 +95,7 @@ func AuthentificationBackend(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%s", data)
 }
 
+// TODO : ajouter la date de création du compte pour pas research avant
 func FindTweetsBetweenDates(w http.ResponseWriter, r *http.Request) {
 
 	var dates models.Dates
@@ -135,6 +136,69 @@ func FindTweetsBetweenDates(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "%s", err.Error())
 		return
 	}
+
+	fmt.Fprintf(w, "%s", data)
+}
+
+func CleanTweets(w http.ResponseWriter, r *http.Request) {
+
+	var tweets_ids models.CleanTweets
+
+	twitter_id := w.Header().Get("twitter_id")
+
+	decoder := json.NewDecoder(r.Body)
+
+	if err := decoder.Decode(&tweets_ids); err != nil {
+		fmt.Fprintf(w, "%s", err.Error())
+		return
+	}
+
+	defer r.Body.Close()
+
+	//Looking for user in database
+	user, err := dao.GetUserByTwitterId(twitter_id)
+
+	if err != nil {
+		fmt.Fprintf(w, "%s", err.Error())
+		return
+	}
+
+	twitter_api, _ := twitter.NewTwitter()
+
+	twitter_api.SetToken(user.Token)
+
+	fmt.Println(tweets_ids)
+
+	var remove int = 50
+
+	//S'il y a plus de 50 tweets à supprimer
+	if len(tweets_ids.TweetsIDS) > 50 {
+
+		//Prend les 50 premiers
+		for _, tweets_id := range tweets_ids.TweetsIDS[50:] {
+			go twitter_api.RemoveTweets(tweets_id)
+		}
+
+		//S'ils en restent stocker en base les suivants
+		_, err = dao.AddTweets(tweets_ids.TweetsIDS[50:], *twitter_api.Token, twitter_id)
+
+		if err != nil {
+			fmt.Fprintf(w, "%s", err.Error())
+			return
+		}
+
+	} else {
+		for _, tweets_id := range tweets_ids.TweetsIDS {
+			fmt.Println(tweets_id)
+			//go twitter_api.RemoveTweets(tweets_id)
+		}
+
+		remove = len(tweets_ids.TweetsIDS)
+	}
+
+	text := fmt.Sprintf("{tweet_remove: %d}", remove)
+
+	data, _ := json.Marshal(text)
 
 	fmt.Fprintf(w, "%s", data)
 }

@@ -3,15 +3,12 @@ package dao
 import (
 	"api-clean-twitter/database"
 	"api-clean-twitter/models"
-	"context"
 	"errors"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
-
-var ctx = context.TODO()
 
 func AddUser(user models.User) (*mongo.UpdateResult, error) {
 	var client = database.ClientDB

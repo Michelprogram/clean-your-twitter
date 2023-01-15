@@ -20,3 +20,7 @@ type InfoTweet struct {
 	Id         string `json:"id, omitempty"`
 	Created_at string `json:"created_at, omitempty"`
 }
+
+type CleanTweets struct {
+	TweetsIDS []string `json:"tweets_id, omitempty"`
+}

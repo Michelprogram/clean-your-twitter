@@ -53,7 +53,6 @@ func (r *Request) isTokenValid() (bool, error) {
 	}
 
 	return true, nil
-
 }
 
 func (r *Request) GetHTTP() (string, error) {
@@ -95,7 +94,7 @@ func (r *Request) GetHTTP() (string, error) {
 	return string(resp_body), nil
 }
 
-func (r Request) PostHTTP() (string, error) {
+func (r *Request) PostHTTP() (string, error) {
 
 	var err error
 
@@ -134,4 +133,43 @@ func (r Request) PostHTTP() (string, error) {
 		return "", errors.New(string(body))
 	}
 	return string(body), nil
+}
+
+func (r *Request) DeleteHTTP() (string, error) {
+	var err error
+
+	_, err = r.isTokenValid()
+
+	if err != nil {
+		return "", err
+	}
+
+	resp, err := http.NewRequest("DELETE", r.url, nil)
+
+	if err != nil {
+		return "", err
+	}
+
+	resp.Header.Set("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8")
+	resp.Header.Set("Authorization", r.createBearerString())
+
+	client := &http.Client{}
+	response, err := client.Do(resp)
+
+	if err != nil {
+		return "", err
+	}
+	defer response.Body.Close()
+
+	body, err := ioutil.ReadAll(response.Body)
+
+	if err != nil {
+		return "", err
+	}
+
+	if response.StatusCode != 200 {
+		return "", errors.New(string(body))
+	}
+	return string(body), nil
+
 }

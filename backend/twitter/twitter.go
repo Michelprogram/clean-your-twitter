@@ -119,3 +119,17 @@ func (twitter Twitter) GetTweetsBetweenDates(dates models.Dates, twitter_id stri
 	return data, nil
 
 }
+
+func (twitter Twitter) RemoveTweets(tweet_id string) (string, error) {
+	url := fmt.Sprintf("https://api.twitter.com/2/tweets/%s", tweet_id)
+
+	req := NewRequest(url, twitter, nil)
+
+	body, err := req.DeleteHTTP()
+
+	if err != nil {
+		return "", err
+	}
+
+	return body, nil
+}
