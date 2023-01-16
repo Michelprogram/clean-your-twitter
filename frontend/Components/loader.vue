@@ -1,16 +1,36 @@
 <template>
   <div class="container-loader">
     <div class="custom-loader"></div>
+    <p class="information">
+      Tweet between {{ displayDateFrom(twitter.getFrom) }} to
+      {{ displayDateFrom(twitter.getTo) }}
+    </p>
     <p>{{ message }} ...</p>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useTweetStore } from "@/store/tweets";
+
 type LoaderProps = {
   message: string;
 };
 
+const twitter = useTweetStore();
+
 const props = defineProps<LoaderProps>();
+
+const displayDateFrom = (date: string) => {
+  const options: Intl.DateTimeFormatOptions = {
+    hour: "numeric",
+    minute: "numeric",
+    month: "long",
+    year: "numeric",
+    day: "numeric",
+  };
+  const formatter = Intl.DateTimeFormat("en-US", options);
+  return formatter.format(new Date(date));
+};
 </script>
 
 <style lang="scss" scoped>
@@ -38,6 +58,10 @@ const props = defineProps<LoaderProps>();
     );
     transform-origin: 50% 40%;
     animation: s5 1s infinite linear;
+  }
+
+  .information {
+    font-size: 1vw;
   }
 
   p {

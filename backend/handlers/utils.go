@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"api-clean-twitter/middleware"
-
 	"errors"
 	"fmt"
 	"net/http"

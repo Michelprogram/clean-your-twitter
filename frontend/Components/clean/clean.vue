@@ -2,7 +2,7 @@
   <div class="clean">
     <p>{{ twitter.deleted }} tweets will be deleted on {{ twitter.size }}</p>
     <p>That represent : {{ pollution }} gram{{ plurals }} of CO2</p>
-    <Button text="Clean" :action="() => clean" :fill="true" />
+    <Button text="Clean" :action="() => clean" :fill="true" :disable="true" />
   </div>
 </template>
 

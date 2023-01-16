@@ -12,6 +12,7 @@
       text="Find tweets"
       :action="() => findTweets"
       :fill="true"
+      :disable="!twitter.isWaiting"
       class="find-tweets"
     />
   </div>
@@ -20,19 +21,19 @@
 <script setup lang="ts">
 import { useTweetStore } from "@/store/tweets";
 
-const startDate = ref("2022/12/21");
+const startDate = ref("2021/01/01");
 const endDate = ref("2023/01/01");
 
 const twitter = useTweetStore();
+
+const cookie = useCookie("token-twitter");
 
 const regex = /\d{4}\/\d{2}\/\d{2}/gm;
 
 const findTweets = computed(async () => {
   const [start, end] = [startDate.value, endDate.value];
   if (start.match(regex) || end.match(regex)) {
-    twitter.UpState();
-    await twitter.getTweets(start, end);
-    twitter.UpState();
+    twitter.getTweets(cookie, start, end);
   }
 });
 </script>

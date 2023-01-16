@@ -95,51 +95,6 @@ func AuthentificationBackend(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%s", data)
 }
 
-// TODO : ajouter la date de création du compte pour pas research avant
-func FindTweetsBetweenDates(w http.ResponseWriter, r *http.Request) {
-
-	var dates models.Dates
-
-	twitter_id := w.Header().Get("twitter_id")
-
-	decoder := json.NewDecoder(r.Body)
-
-	if err := decoder.Decode(&dates); err != nil {
-		fmt.Fprintf(w, "%s", err.Error())
-		return
-	}
-
-	defer r.Body.Close()
-
-	//Looking for user in database
-	user, err := dao.GetUserByTwitterId(twitter_id)
-
-	if err != nil {
-		fmt.Fprintf(w, "%s", err.Error())
-		return
-	}
-
-	twitter_api, _ := twitter.NewTwitter()
-
-	twitter_api.SetToken(user.Token)
-
-	res, err := twitter_api.GetTweetsBetweenDates(dates, twitter_id)
-
-	if err != nil {
-		fmt.Fprintf(w, "%s", err.Error())
-		return
-	}
-
-	data, err := json.Marshal(res)
-
-	if err != nil {
-		fmt.Fprintf(w, "%s", err.Error())
-		return
-	}
-
-	fmt.Fprintf(w, "%s", data)
-}
-
 func CleanTweets(w http.ResponseWriter, r *http.Request) {
 
 	var tweets_ids models.CleanTweets

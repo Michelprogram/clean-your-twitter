@@ -1,12 +1,16 @@
 import BackendApi from "@/api/backend";
 import { Tweet } from "@/types/api";
+import { CookieRef } from "nuxt/dist/app/composables";
 import { defineStore } from "pinia";
+import WebSocketB from "~~/api/websocket";
 
 export const useTweetStore = defineStore({
   id: "tweet-store",
   state: () => {
     return {
       tweets: new Array<Tweet>(),
+      from: String(""),
+      to: String(""),
       state: Number(0),
     };
   },
@@ -14,11 +18,38 @@ export const useTweetStore = defineStore({
     UpState() {
       this.state++;
     },
-    async getTweets(startDate: string, endDate: string) {
-      this.tweets = await BackendApi.tweets(startDate, endDate);
+    setFrom(from: string) {
+      this.from = from;
+    },
+    setTo(to: string) {
+      this.to = to;
+    },
+    getTweets(cookie: CookieRef<string>, start: string, end: string) {
+      this.UpState();
+
+      const socket = WebSocketB.tweets(cookie, start, end);
+
+      socket.onmessage = (data: MessageEvent) => {
+        const tweets = JSON.parse(data.data) as Array<Tweet>;
+
+        this.setFrom(tweets[0].created_at);
+        this.setTo(tweets.at(-1)!.created_at);
+
+        tweets.forEach((t) => (t.deleted = true));
+
+        this.tweets.push(...tweets);
+      };
+
+      socket.onclose = () => this.UpState();
     },
   },
   getters: {
+    getFrom(): string {
+      return this.from;
+    },
+    getTo(): string {
+      return this.to;
+    },
     size(): number {
       return this.tweets.length;
     },

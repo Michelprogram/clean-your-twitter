@@ -81,42 +81,32 @@ func (twitter Twitter) UsersInfo() (*DataUser, error) {
 
 }
 
-// TODO : A faire en fonction recursive
-func (twitter Twitter) GetTweetsBetweenDates(dates models.Dates, twitter_id string) ([]*models.InfoTweet, error) {
+func (twitter Twitter) GetTweetsBetweenDates(dates models.Dates, twitter_id string, next_token *string) ([]*models.InfoTweet, error) {
 
-	var flag bool = true
 	var url string = ""
-	var next_token string = ""
-	var data []*models.InfoTweet
+	var tweet models.Tweet
 
-	for flag {
-		var tweet models.Tweet
-		url = fmt.Sprintf("https://api.twitter.com/2/users/%s/tweets?max_results=100&tweet.fields=created_at%%2Centities&exclude=retweets&start_time=%s&end_time=%s", twitter_id, dates.Start, dates.End)
+	url = fmt.Sprintf("https://api.twitter.com/2/users/%s/tweets?max_results=100&tweet.fields=created_at%%2Centities&exclude=retweets&start_time=%s&end_time=%s", twitter_id, dates.Start, dates.End)
 
-		if next_token != "" {
-			url = fmt.Sprintf("%s&=pagination_token=%s", url, next_token)
-		}
-
-		req := NewRequest(url, twitter, nil)
-
-		body, err := req.GetHTTP()
-
-		if err != nil {
-			return nil, err
-		}
-
-		json.Unmarshal([]byte(body), &tweet)
-
-		data = append(data, tweet.Data...)
-
-		if tweet.Meta.NextToken != "" {
-			next_token = tweet.Meta.NextToken
-		} else {
-			flag = false
-		}
+	//Check if next_token is empty, so is first request
+	if *next_token != "" {
+		url = fmt.Sprintf("%s&=pagination_token=%s", url, *next_token)
 	}
 
-	return data, nil
+	req := NewRequest(url, twitter, nil)
+
+	body, err := req.GetHTTP()
+
+	if err != nil {
+		return nil, err
+	}
+
+	json.Unmarshal([]byte(body), &tweet)
+
+	//Return token if next token exist
+	*next_token = tweet.Meta.NextToken
+
+	return tweet.Data, nil
 
 }
 

@@ -111,7 +111,7 @@ jobs:
           context: ./frontend/.
           push: true
           build-args: |
-            VERSION="1.0.4"
+            VERSION="1.0.6"
           tags: michelprogram/clean-your-twitter-web:latest
 
   deploy-api:
@@ -142,4 +142,4 @@ jobs:
           webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
           username: "Github Action"
           avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
-          message: "The backend project has been deploy you can reach at http://clean-your-tw.online:3000 🛰️"
+          message: "The backend project has been deploy you can reach at http://clean-your-tw.online 🛰️"
