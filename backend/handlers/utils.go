@@ -22,3 +22,10 @@ func TestCode(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Fprintln(w, twitter_id)
 }
+
+func Error(w http.ResponseWriter, r *http.Request) {
+
+	var response string = `{error:"This route doesn't exist"}`
+
+	fmt.Fprintln(w, response)
+}

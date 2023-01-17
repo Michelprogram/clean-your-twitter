@@ -1,7 +1,7 @@
 <template>
   <div class="paragraphe-component">
-    <h3 class="title">{{ title }}</h3>
-    <p class="text" v-html="description"></p>
+    <h3 class="title cursor-title">{{ title }}</h3>
+    <p class="text cursor-text" v-html="description"></p>
   </div>
 </template>
 

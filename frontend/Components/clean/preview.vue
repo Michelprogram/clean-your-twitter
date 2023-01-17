@@ -2,6 +2,10 @@
   <div>
     <div class="title">
       <p>Preview</p>
+      <p class="info-rate-limit">
+        {{ twitter.rate }} on {{ twitter.limit }} requests limit, fixed by
+        twitter.
+      </p>
       <hr />
     </div>
 
@@ -75,6 +79,19 @@ hr {
   height: 2px;
   color: $main;
   border: 1px solid $main;
+}
+
+.title {
+  position: relative;
+  .info-rate-limit {
+    position: absolute;
+    right: 0;
+    top: 1em;
+    font-size: 1vw;
+    margin-top: 1em;
+    font-style: italic;
+    font-weight: 500;
+  }
 }
 
 .content {

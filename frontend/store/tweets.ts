@@ -12,6 +12,8 @@ export const useTweetStore = defineStore({
       from: String(""),
       to: String(""),
       state: Number(0),
+      limit: Number(0),
+      rate: Number(0),
     };
   },
   actions: {
@@ -29,8 +31,13 @@ export const useTweetStore = defineStore({
 
       const socket = WebSocketB.tweets(cookie, start, end);
 
-      socket.onmessage = (data: MessageEvent) => {
-        const tweets = JSON.parse(data.data) as Array<Tweet>;
+      socket.onmessage = (event: MessageEvent) => {
+        const data = JSON.parse(event.data);
+        const tweets = data.data as Array<Tweet>;
+        const rate = data.rate;
+
+        this.limit = rate.limit
+        this.rate = rate.remaining
 
         this.setFrom(tweets[0].created_at);
         this.setTo(tweets.at(-1)!.created_at);

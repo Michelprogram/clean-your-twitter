@@ -41,13 +41,11 @@ func main() {
 	backend_routes.Use(m.AuthBackend)
 
 	backend_routes.HandleFunc("/auth", h.AuthentificationBackend).Methods("GET")
+	backend_routes.HandleFunc("/clean", h.CleanTweets).Methods("POST")
 
 	websocket_routes := router.PathPrefix("/ws").Subrouter()
 
 	websocket_routes.Handle("/tweets", websocket.Handler(h.Fetch))
-	websocket_routes.Handle("/clean", websocket.Handler(h.Deleting))
-	//backend_routes.HandleFunc("/tweets", h.FindTweetsBetweenDates).Methods("POST")
-	//backend_routes.HandleFunc("/clean", h.CleanTweets).Methods("POST")
 
 	//Ping server
 	test_routes := router.PathPrefix("/test").Subrouter()
@@ -67,6 +65,6 @@ func main() {
 	err = http.ListenAndServe("0.0.0.0:"+port, handler)
 
 	if err != nil {
-		fmt.Printf("Err start serveur : %v\n", err)
+		fmt.Printf("Err start server : %v\n", err)
 	}
 }

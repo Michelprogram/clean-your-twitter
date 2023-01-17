@@ -69,7 +69,7 @@ func (twitter Twitter) UsersInfo() (*DataUser, error) {
 
 	req := NewRequest(user_info, twitter, nil)
 
-	body, err := req.GetHTTP()
+	body, _, err := req.GetHTTP()
 
 	if err != nil {
 		return nil, err
@@ -81,7 +81,7 @@ func (twitter Twitter) UsersInfo() (*DataUser, error) {
 
 }
 
-func (twitter Twitter) GetTweetsBetweenDates(dates models.Dates, twitter_id string, next_token *string) ([]*models.InfoTweet, error) {
+func (twitter Twitter) GetTweetsBetweenDates(dates models.Dates, twitter_id string, next_token *string) (*models.Tweet, error) {
 
 	var url string = ""
 	var tweet models.Tweet
@@ -95,7 +95,7 @@ func (twitter Twitter) GetTweetsBetweenDates(dates models.Dates, twitter_id stri
 
 	req := NewRequest(url, twitter, nil)
 
-	body, err := req.GetHTTP()
+	body, rate, err := req.GetHTTP()
 
 	if err != nil {
 		return nil, err
@@ -106,7 +106,9 @@ func (twitter Twitter) GetTweetsBetweenDates(dates models.Dates, twitter_id stri
 	//Return token if next token exist
 	*next_token = tweet.Meta.NextToken
 
-	return tweet.Data, nil
+	tweet.Rate = rate
+
+	return &tweet, nil
 
 }
 

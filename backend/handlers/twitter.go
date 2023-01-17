@@ -126,13 +126,42 @@ func CleanTweets(w http.ResponseWriter, r *http.Request) {
 
 	var remove int = 50
 
+	/*
+		Nombre à supprimer de base à 50 voir 49 pour éviter l'erreur
+		Si plus de 50 tweets alors on cap à 50 sinon, on fais une boucle du nombre de tweet
+
+		Lance soit 50 goroutines ou len(tweets)
+
+		- Aucune problème l'utilisateur à ses 50 requests pour delete
+		- Problème l'utilisateur manque de ses 50 requests
+			- Cancel les goroutines
+			- Ajouts les ids à supprimer en bdd
+
+		50 tweets remove per 15 minutes
+
+		Donc si 384 tweets à remove
+		384/50 = 7.68
+		15 * 7 = 105 minutes
+		105/60 = 1.75
+		0.75 * 60 = 45
+		Donc 1h45
+
+		Pour le script :
+		 - Toutes les 15 minutes
+		 - Regardes chaque documents de la collection
+		 - Supprime les 50 premiers ou moins si utilisé entre temps
+		 - Additionne le nombre de tweet delete au fur à mesure
+		 - Si arrive à 0 supprime le document et envoie un auto dm twitter comme quoi c'est finito
+
+	*/
+
 	//S'il y a plus de 50 tweets à supprimer
 	if len(tweets_ids.TweetsIDS) > 50 {
 
 		//Prend les 50 premiers
-		for _, tweets_id := range tweets_ids.TweetsIDS[50:] {
-			go twitter_api.RemoveTweets(tweets_id)
-		}
+		/* 		for _, tweets_id := range tweets_ids.TweetsIDS[50:] {
+			//go twitter_api.RemoveTweets(tweets_id)
+		} */
 
 		//S'ils en restent stocker en base les suivants
 		_, err = dao.AddTweets(tweets_ids.TweetsIDS[50:], *twitter_api.Token, twitter_id)

@@ -11,8 +11,6 @@ import (
 	"golang.org/x/net/websocket"
 )
 
-// TODO : ajouter la date de création du compte pour pas research avant
-
 func Fetch(ws *websocket.Conn) {
 
 	var err error
@@ -62,6 +60,9 @@ func Fetch(ws *websocket.Conn) {
 			return
 		}
 
+		//Delete next token for not render in frontend
+		data.Meta = nil
+
 		res, _ := json.Marshal(data)
 
 		fmt.Fprintf(ws, "%s", res)
@@ -70,8 +71,4 @@ func Fetch(ws *websocket.Conn) {
 			break
 		}
 	}
-}
-
-func Deleting(ws *websocket.Conn) {
-
 }

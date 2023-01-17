@@ -8,6 +8,7 @@ type Dates struct {
 type Tweet struct {
 	Data []*InfoTweet `json:"data,omitempty" `
 	Meta *Meta        `json:"meta,omitempty" `
+	Rate *Rate        `json:"rate,omitempty" `
 }
 
 type Meta struct {
@@ -23,4 +24,9 @@ type InfoTweet struct {
 
 type CleanTweets struct {
 	TweetsIDS []string `json:"tweets_id, omitempty"`
+}
+
+type Rate struct {
+	Limit     string `json:"limit, omitempty"`
+	Remaining string `json:"remaining, omitempty"`
 }

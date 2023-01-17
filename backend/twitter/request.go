@@ -2,6 +2,7 @@ package twitter
 
 import (
 	"api-clean-twitter/dao"
+	"api-clean-twitter/models"
 	"encoding/base64"
 	"errors"
 	"fmt"
@@ -55,20 +56,20 @@ func (r *Request) isTokenValid() (bool, error) {
 	return true, nil
 }
 
-func (r *Request) GetHTTP() (string, error) {
+func (r *Request) GetHTTP() (string, *models.Rate, error) {
 
 	var err error
 
 	_, err = r.isTokenValid()
 
 	if err != nil {
-		return "", err
+		return "", nil, err
 	}
 
 	req, err := http.NewRequest("GET", r.url, nil)
 
 	if err != nil {
-		return "", err
+		return "", nil, err
 	}
 
 	req.Header.Set("Authorization", r.createBearerString())
@@ -77,21 +78,26 @@ func (r *Request) GetHTTP() (string, error) {
 	resp, err := client.Do(req)
 
 	if err != nil {
-		return "", err
+		return "", nil, err
 	}
 
 	defer resp.Body.Close()
 	resp_body, err := ioutil.ReadAll(resp.Body)
 
 	if err != nil {
-		return "", err
+		return "", nil, err
 	}
 
 	if resp.StatusCode != 200 {
-		return "", errors.New(string(resp_body))
+		return "", nil, errors.New(string(resp_body))
 	}
 
-	return string(resp_body), nil
+	header := &models.Rate{
+		Limit:     resp.Header.Get("x-rate-limit-limit"),
+		Remaining: resp.Header.Get("x-rate-limit-remaining"),
+	}
+
+	return string(resp_body), header, nil
 }
 
 func (r *Request) PostHTTP() (string, error) {
