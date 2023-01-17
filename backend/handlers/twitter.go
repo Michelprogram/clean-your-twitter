@@ -50,7 +50,7 @@ func AuthentificationTwitter(w http.ResponseWriter, r *http.Request) {
 
 	metrics := models.NewMetrics(data.Data.PublicMetrics.FollowersCount, data.Data.PublicMetrics.FollowingCount, data.Data.PublicMetrics.TweetCount)
 
-	user := models.NewUser(data.Data.ProfileImageURL, data.Data.Username, data.Data.Name, data.Data.TwitterId, int(0), metrics, twitter.Token)
+	user := models.NewUser(data.Data.ProfileImageURL, data.Data.Username, data.Data.Name, data.Data.CreatedAt, data.Data.TwitterId, int(0), metrics, twitter.Token)
 
 	//Add or update user depend on twitter id
 	dao.AddUser(*user)

@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import Button from "@/Components/button.vue";
+import Button from "@/components/utils/button.vue";
 import { generateTwitterOAuth } from "@/api/twitter";
 import { useUserStore } from "@/store/user";
 
@@ -130,7 +130,7 @@ const isLogged = computed((): boolean => {
     }
 
     &.img-1 {
-      bottom: 20em;
+      top: 5em;
       right: -5em;
     }
 
@@ -139,7 +139,7 @@ const isLogged = computed((): boolean => {
     }
 
     &.img-3 {
-      bottom: 1em;
+      top: 10em;
       left: -10em;
     }
   }

@@ -20,6 +20,7 @@ export default class BackendApi {
       picture: json.profile_image_url,
       username: json.username,
       pseudo: json.name,
+      created_at: json.created_at,
     };
 
     return res;

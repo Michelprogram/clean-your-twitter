@@ -12,6 +12,7 @@ type DataUser struct {
 		ProfileImageURL string `json:"profile_image_url,omitempty" bson:"profile_image_url"`
 		Username        string `json:"username,omitempty" bson:"username"`
 		Name            string `json:"name,omitempty" bson:"name"`
+		CreatedAt       string `json:"created_at,omitempty" bson:"created_at"`
 		PublicMetrics   struct {
 			FollowersCount int `json:"followers_count,omitempty" bson:"followers_count"`
 			FollowingCount int `json:"following_count,omitempty" bson:"following_count"`

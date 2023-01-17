@@ -63,7 +63,7 @@ func (twitter *Twitter) RefreshToken() error {
 }
 
 func (twitter Twitter) UsersInfo() (*DataUser, error) {
-	var user_info string = "https://api.twitter.com/2/users/me?user.fields=profile_image_url%2Cpublic_metrics"
+	var user_info string = "https://api.twitter.com/2/users/me?user.fields=profile_image_url%2Cpublic_metrics%2Ccreated_at"
 
 	var user DataUser
 

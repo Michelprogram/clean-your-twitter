@@ -82,6 +82,7 @@ func GetImageUserById(twitter_id string) (*models.User, error) {
 		"user.profile_image_url": 1,
 		"user.username":          1,
 		"user.name":              1,
+		"user.created_at":        1,
 		"_id":                    0,
 	})
 

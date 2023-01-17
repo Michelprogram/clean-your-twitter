@@ -2,8 +2,8 @@
   <div class="container-loader">
     <div class="custom-loader"></div>
     <p class="information">
-      Tweet between {{ displayDateFrom(twitter.getFrom) }} to
-      {{ displayDateFrom(twitter.getTo) }}
+      Tweets between {{ displayDate(twitter.getFrom) }} and
+      {{ displayDate(twitter.getTo) }}
     </p>
     <p>{{ message }} ...</p>
   </div>
@@ -11,25 +11,17 @@
 
 <script setup lang="ts">
 import { useTweetStore } from "@/store/tweets";
+import Formatter from "@/utils/dates";
 
 type LoaderProps = {
   message: string;
 };
+defineProps<LoaderProps>();
 
 const twitter = useTweetStore();
 
-const props = defineProps<LoaderProps>();
-
-const displayDateFrom = (date: string) => {
-  const options: Intl.DateTimeFormatOptions = {
-    hour: "numeric",
-    minute: "numeric",
-    month: "long",
-    year: "numeric",
-    day: "numeric",
-  };
-  const formatter = Intl.DateTimeFormat("en-US", options);
-  return formatter.format(new Date(date));
+const displayDate = (date: string) => {
+  return Formatter.short.format(new Date(date));
 };
 </script>
 

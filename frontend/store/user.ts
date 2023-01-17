@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { User } from "@/types/store";
 
 export const useUserStore = defineStore({
   id: "user-store",
@@ -7,13 +8,15 @@ export const useUserStore = defineStore({
       picture: "",
       username: "",
       pseudo: "",
+      created_at: "",
     };
   },
   actions: {
-    newStore(picture: string, username: string, pseudo: string) {
-      this.picture = picture;
-      this.username = username;
-      this.pseudo = pseudo;
+    newStore(user: User) {
+      this.picture = user.picture;
+      this.username = user.username;
+      this.pseudo = user.pseudo;
+      this.created_at = user.created_at;
     },
   },
   getters: {},

@@ -20,7 +20,7 @@
       <p>{{ tweet.text }}</p>
     </div>
     <div class="footer">
-      <p>{{ displayDate }}</p>
+      <p>{{ createdAt }}</p>
       <a :href="tweetLink" target="_blank">Go to the tweet</a>
     </div>
   </div>
@@ -29,6 +29,7 @@
 <script setup lang="ts">
 import { Tweet } from "@/types/api";
 import { User } from "@/types/store";
+import Formatter from "@/utils/dates";
 
 interface TweetProps {
   user: User;
@@ -47,18 +48,9 @@ const updateLink = () => {
     : "/images/svg/twitter-blue.svg";
 };
 
-const displayDate = computed((): string => {
-  const options: Intl.DateTimeFormatOptions = {
-    hour: "numeric",
-    minute: "numeric",
-    month: "long",
-    year: "numeric",
-    day: "numeric",
-  };
-  const formatter = Intl.DateTimeFormat("en-US", options);
+const createdAt = computed((): string => {
   const date = new Date(props.tweet.created_at);
-
-  return formatter.format(date);
+  return Formatter.full.format(date);
 });
 
 const tweetLink = computed((): string => {

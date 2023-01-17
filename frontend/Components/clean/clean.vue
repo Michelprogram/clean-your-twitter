@@ -1,6 +1,6 @@
 <template>
   <div class="clean">
-    <p>{{ twitter.deleted }} tweets will be deleted on {{ twitter.size }}</p>
+    <p>{{ twitter.deleted }} tweets will be deleted on{{ twitter.size }}</p>
     <p>That represent : {{ pollution }} gram{{ plurals }} of CO2</p>
     <Button text="Clean" :action="() => clean" :fill="true" :disable="true" />
   </div>
@@ -9,6 +9,7 @@
 <script setup lang="ts">
 import { useTweetStore } from "@/store/tweets";
 import BackendApi from "@/api/backend";
+import Button from "@/components/utils/button.vue";
 
 const twitter = useTweetStore();
 

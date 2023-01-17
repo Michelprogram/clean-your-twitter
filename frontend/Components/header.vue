@@ -38,14 +38,13 @@
 </template>
 
 <script setup lang="ts">
-import Button from "@/Components/button.vue";
+import Button from "~~/components/utils/button.vue";
 import { generateTwitterOAuth } from "../api/twitter";
 import BackendApi from "../api/backend";
 import { useUserStore } from "../store/user";
 
 const cookie = useCookie("token-twitter");
 const url = useRoute();
-const router = useRouter();
 const user = useUserStore();
 
 const login = (): void => {
@@ -54,7 +53,8 @@ const login = (): void => {
 
 const logout = computed((): void => {
   cookie.value = "";
-  router.push({ name: "index" });
+  const url = new URL("/", window.location.origin);
+  window.location.href = url.toString();
 });
 
 const isConnected = computed((): boolean => {
@@ -70,7 +70,7 @@ onMounted(async () => {
   //Cookie existe verifie l'identité
   if (cookie.value) {
     const u = await BackendApi.infoUser();
-    user.newStore(u.picture, u.username, u.pseudo);
+    user.newStore(u);
   }
 });
 </script>
