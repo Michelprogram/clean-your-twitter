@@ -10,5 +10,5 @@
 <script setup>
 import Header from "@/Components/header.vue";
 import Footer from "@/Components/footer.vue";
-import Cursor from "~~/components/utils/cursor.vue";
+import Cursor from "@/Components/utils/cursor.vue";
 </script>
