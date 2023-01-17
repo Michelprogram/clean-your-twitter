@@ -45,8 +45,8 @@
 </template>
 
 <script setup lang="ts">
-import Loader from "@/components/utils/loader.vue";
-import Input from "@/components/utils/input.vue";
+import Loader from "@/Components/utils/loader.vue";
+import Input from "@/Components/utils/input.vue";
 import Tweet from "@/Components/tweet.vue";
 import { useTweetStore } from "@/store/tweets";
 import { useUserStore } from "@/store/user";

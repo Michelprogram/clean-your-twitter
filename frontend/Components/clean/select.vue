@@ -24,8 +24,8 @@
 import { useTweetStore } from "@/store/tweets";
 import { useUserStore } from "@/store/user";
 import Formatter from "@/utils/dates";
-import Input from "@/components/utils/input.vue";
-import Button from "@/components/utils/button.vue";
+import Input from "@/Components/utils/input.vue";
+import Button from "@/Components/utils/button.vue";
 
 const startDate = ref("2021/01/01");
 const endDate = ref("2023/01/01");

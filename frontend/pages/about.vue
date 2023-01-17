@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import Paragraphe from "@/components/about/paragraphe.vue";
+import Paragraphe from "@/Components/about/paragraphe.vue";
 
 const data = [
   {
