@@ -38,10 +38,10 @@
 </template>
 
 <script setup lang="ts">
-import Button from "~~/components/utils/button.vue";
-import { generateTwitterOAuth } from "../api/twitter";
-import BackendApi from "../api/backend";
-import { useUserStore } from "../store/user";
+import Button from "@/Components/utils/button.vue";
+import { generateTwitterOAuth } from "@/api/twitter";
+import BackendApi from "@/api/backend";
+import { useUserStore } from "@/store/user";
 
 const cookie = useCookie("token-twitter");
 const url = useRoute();
