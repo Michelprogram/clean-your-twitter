@@ -74,7 +74,7 @@ export const useTweetStore = defineStore({
   getters: {
     timeDelete(): string {
       const factor = (this.stored - 50) / 50;
-      console.log(factor);
+
       const minutes = Math.floor(15 * factor);
 
       if (minutes < 60) return `0h${minutes}`;

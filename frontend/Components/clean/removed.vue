@@ -1,15 +1,21 @@
 <template>
   <div class="removed">
-    <p>
-      <span class="number-info">{{ twitter.removed }}</span> tweets have been
-      deleted and <span class="number-info">{{ twitter.stored }}</span> tweets
-      have been stored.
-    </p>
-    <p>
-      This will take
-      <span class="number-info">{{ twitter.timeDelete }}</span> to remove
-      <span class="number-info">{{ twitter.stored }}</span> tweets
-    </p>
+    <div v-if="twitter.stored == 0">
+      <p>All your tweets have been deleted</p>
+    </div>
+    <div v-else>
+      <p>
+        <span class="number-info">{{ twitter.removed }}</span> tweets have been
+        deleted and <span class="number-info">{{ twitter.stored }}</span> tweets
+        have been stored.
+      </p>
+      <p>
+        This will take
+        <span class="number-info">{{ twitter.timeDelete }}</span> to remove
+        <span class="number-info">{{ twitter.stored }}</span> tweets
+      </p>
+    </div>
+
     <Button text="Back home" :fill="true" :action="backHome" />
   </div>
 </template>
@@ -29,7 +35,6 @@ const backHome = () => {
 
 <style lang="scss" scoped>
 .removed {
-  outline: 2px solid red;
   height: 70%;
 
   display: flex;

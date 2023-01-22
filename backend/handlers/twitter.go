@@ -128,6 +128,7 @@ func CleanTweets(w http.ResponseWriter, r *http.Request) {
 
 	tweets := tweets_ids.TweetsIDS
 	size := len(tweets)
+
 	if size == 0 {
 		return
 	}
@@ -140,12 +141,17 @@ func CleanTweets(w http.ResponseWriter, r *http.Request) {
 	//Récupérer le nombre de requets restant stocké dans rate
 	remaining, _ := strconv.Atoi(rate.Remaining)
 
+	//Si moins de tweet que de request
+	if size < remaining {
+		remaining = size
+	}
+
 	//Plus aucune request disponible
 	if err != nil || remaining == 0 {
 		dao.AddTweets(tweets, *twitter_api.Token, twitter_id)
 		stored = size
 	} else {
-		selected_tweets := tweets[1 : remaining+1]
+		selected_tweets := tweets[1:remaining]
 		for _, tweet_id := range selected_tweets {
 			go twitter_api.RemoveTweet(tweet_id)
 		}
@@ -157,23 +163,8 @@ func CleanTweets(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	text := fmt.Sprintf("tweet_removed: %d, tweet_stored: %d", remaining, stored)
+	text := fmt.Sprintf(`{"tweet_removed":"%d", "tweet_stored": "%d"}`, remaining, stored)
 
-	data, _ := json.Marshal(text)
-
-	fmt.Fprintf(w, "%s", data)
-
-	/*
-
-		50 tweets remove per 15 minutes
-
-		Donc si 384 tweets à remove
-		384/50 = 7.68
-		15 * 7 = 105 minutes
-		105/60 = 1.75
-		0.75 * 60 = 45
-		Donc 1h45
-
-	*/
+	fmt.Fprintf(w, "%s", text)
 
 }
