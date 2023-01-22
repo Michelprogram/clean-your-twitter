@@ -40,9 +40,7 @@
           </div>
         </div>
         <Loader v-else-if="twitter.isDeleting" message="Tweets deleting" />
-        <div v-else>
-          <p>All your tweets have been deleted.</p>
-        </div>
+        <Removed v-else />
       </transition>
     </div>
   </div>
@@ -52,6 +50,7 @@
 import Loader from "@/Components/utils/loader.vue";
 import Input from "@/Components/utils/input.vue";
 import Tweet from "@/Components/tweet.vue";
+import Removed from "@/Components/clean/removed.vue";
 import { useTweetStore } from "@/store/tweets";
 import { useUserStore } from "@/store/user";
 

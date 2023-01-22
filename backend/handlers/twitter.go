@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 func AuthentificationTwitter(w http.ResponseWriter, r *http.Request) {
@@ -54,6 +55,8 @@ func AuthentificationTwitter(w http.ResponseWriter, r *http.Request) {
 
 	//Add or update user depend on twitter id
 	dao.AddUser(*user)
+	//Update token in tweets collection
+	dao.UpdateTokenTweets2(*user)
 
 	//Generate new JWT
 	jwt, err := jwt.GenerateJWT(user.TwitterId)
@@ -98,6 +101,7 @@ func AuthentificationBackend(w http.ResponseWriter, r *http.Request) {
 func CleanTweets(w http.ResponseWriter, r *http.Request) {
 
 	var tweets_ids models.CleanTweets
+	var stored int
 
 	twitter_id := w.Header().Get("twitter_id")
 
@@ -122,20 +126,44 @@ func CleanTweets(w http.ResponseWriter, r *http.Request) {
 
 	twitter_api.SetToken(user.Token)
 
-	fmt.Println(tweets_ids)
+	tweets := tweets_ids.TweetsIDS
+	size := len(tweets)
+	if size == 0 {
+		return
+	}
 
-	var remove int = 50
+	firstTweet := tweets[0]
+
+	//Faire une premiere request de suppression
+	rate, err := twitter_api.RemoveTweet(firstTweet)
+
+	//Récupérer le nombre de requets restant stocké dans rate
+	remaining, _ := strconv.Atoi(rate.Remaining)
+
+	//Plus aucune request disponible
+	if err != nil || remaining == 0 {
+		dao.AddTweets(tweets, *twitter_api.Token, twitter_id)
+		stored = size
+	} else {
+		selected_tweets := tweets[1 : remaining+1]
+		for _, tweet_id := range selected_tweets {
+			go twitter_api.RemoveTweet(tweet_id)
+		}
+		//Stocker en base le reste sans doublons dans un tableau
+		if size > remaining {
+			rest_tweets := tweets[remaining:]
+			dao.AddTweets(rest_tweets, *twitter_api.Token, twitter_id)
+			stored = len(rest_tweets)
+		}
+	}
+
+	text := fmt.Sprintf("tweet_removed: %d, tweet_stored: %d", remaining, stored)
+
+	data, _ := json.Marshal(text)
+
+	fmt.Fprintf(w, "%s", data)
 
 	/*
-		Nombre à supprimer de base à 50 voir 49 pour éviter l'erreur
-		Si plus de 50 tweets alors on cap à 50 sinon, on fais une boucle du nombre de tweet
-
-		Lance soit 50 goroutines ou len(tweets)
-
-		- Aucune problème l'utilisateur à ses 50 requests pour delete
-		- Problème l'utilisateur manque de ses 50 requests
-			- Cancel les goroutines
-			- Ajouts les ids à supprimer en bdd
 
 		50 tweets remove per 15 minutes
 
@@ -146,43 +174,6 @@ func CleanTweets(w http.ResponseWriter, r *http.Request) {
 		0.75 * 60 = 45
 		Donc 1h45
 
-		Pour le script :
-		 - Toutes les 15 minutes
-		 - Regardes chaque documents de la collection
-		 - Supprime les 50 premiers ou moins si utilisé entre temps
-		 - Additionne le nombre de tweet delete au fur à mesure
-		 - Si arrive à 0 supprime le document et envoie un auto dm twitter comme quoi c'est finito
-
 	*/
 
-	//S'il y a plus de 50 tweets à supprimer
-	if len(tweets_ids.TweetsIDS) > 50 {
-
-		//Prend les 50 premiers
-		/* 		for _, tweets_id := range tweets_ids.TweetsIDS[50:] {
-			//go twitter_api.RemoveTweets(tweets_id)
-		} */
-
-		//S'ils en restent stocker en base les suivants
-		_, err = dao.AddTweets(tweets_ids.TweetsIDS[50:], *twitter_api.Token, twitter_id)
-
-		if err != nil {
-			fmt.Fprintf(w, "%s", err.Error())
-			return
-		}
-
-	} else {
-		for _, tweets_id := range tweets_ids.TweetsIDS {
-			fmt.Println(tweets_id)
-			//go twitter_api.RemoveTweets(tweets_id)
-		}
-
-		remove = len(tweets_ids.TweetsIDS)
-	}
-
-	text := fmt.Sprintf("{tweet_remove: %d}", remove)
-
-	data, _ := json.Marshal(text)
-
-	fmt.Fprintf(w, "%s", data)
 }

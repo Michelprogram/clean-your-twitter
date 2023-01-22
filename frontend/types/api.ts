@@ -14,4 +14,8 @@ export type Tweet = {
   id: string;
   deleted: boolean;
 };
-//
+
+export interface TweetClean {
+  tweet_removed: number;
+  tweet_stored: number;
+}

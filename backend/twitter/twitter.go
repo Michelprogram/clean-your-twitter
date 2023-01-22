@@ -112,16 +112,34 @@ func (twitter Twitter) GetTweetsBetweenDates(dates models.Dates, twitter_id stri
 
 }
 
-func (twitter Twitter) RemoveTweets(tweet_id string) (string, error) {
+func (twitter Twitter) RemoveTweet(tweet_id string) (*models.Rate, error) {
 	url := fmt.Sprintf("https://api.twitter.com/2/tweets/%s", tweet_id)
 
 	req := NewRequest(url, twitter, nil)
 
-	body, err := req.DeleteHTTP()
+	_, rate, err := req.DeleteHTTP()
 
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return body, nil
+	return rate, nil
+}
+
+func (twitter Twitter) SendMessage(user_id string, message string) error {
+	uri := fmt.Sprintf("https://api.twitter.com/2/dm_conversations/with/%s/messages", user_id)
+
+	data := url.Values{}
+
+	data.Set("text", message)
+
+	req := NewRequest(uri, twitter, data)
+
+	_, err := req.POSTDeleteHTTP()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

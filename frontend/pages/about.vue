@@ -21,13 +21,14 @@ const data = [
     descritpion: `Unfornutality i’m not a hacker i used OAuth 2.0 which is an authentication protocol that allows an application to access a user's information on another website, while keeping the user's identification information (such as their username and password) private.\n 
       This means that you can use your account information on one website to log in to other apps, without having to share your actual identification information with those apps.\n
       When a user wants to log in to the application with their identification information, the application redirects the user to the identity provider so they can enter their identification information. Once the user enters their identification information and grants permission, the identity provider sends a token to the application, which then uses it to access the user's information.\n
-      By using OAuth 2.0, apps can obtain access to user information securely, without having to ask the user to enter their identification information each time. It also makes the user experience smoother, as users don't have to remember a lot of usernames and passwords for different apps.
+      By using OAuth 2.0, apps can obtain access to user information securely, without having to ask the user to enter their identification information each time. It also makes the user experience smoother, as users don't have to remember a lot of usernames and passwords for different apps.\n
+      I need bunch of right, tweet read and tweet write to search your tweets and remove it, also need direct message to send you message when all your tweets are deleted.
     `,
   },
   {
     title: "How your tweets are deleted ?",
     descritpion: `Once you connect to the application, I communicate with the Twitter API using your access tokens. Unfortunately, for security reasons, Twitter limits the number of API calls per user and per type of request.\n
-       A user can make up to 900 requests to the Twitter API every 15 minutes, and can only delete 50 tweets every 15 minutes. That's why the application saves the ID of the next tweets to delete.\n
+       A user can make up to 900 requests to the Twitter API every 15 minutes, and can only delete 50 tweets every 15 minutes. That's why the application saves the ID of the next tweets to delete. So for 150 tweets to remove we doing 150/50 = 3 than 15 * 3 = 45, we needs 45 minutes to remove 150 tweets. \n
        Then a program regularly checks the stored tweets and delete them every 15 minutes. On the clean page, you can find a counter that shows you how many requests are available, and how much application needs to delete all your tweets.
        `,
   },

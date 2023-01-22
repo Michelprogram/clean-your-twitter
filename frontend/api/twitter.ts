@@ -15,7 +15,7 @@ export function generateTwitterOAuth(): string {
     response_type: "code",
     code_challenge: "y_SfRG4BmOES02uqWeIkIgLQAlTBggyf_G7uKT51ku8",
     code_challenge_method: "S256",
-    scope: "tweet.read tweet.write users.read offline.access",
+    scope: "tweet.read tweet.write users.read dm.write offline.access",
   };
   const qs = new URLSearchParams(options).toString();
   return `https://twitter.com/i/oauth2/authorize?${qs}`;

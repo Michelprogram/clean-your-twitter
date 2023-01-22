@@ -1,13 +1,14 @@
 package main
 
 import (
+	"api-clean-twitter/cron"
 	"api-clean-twitter/database"
 	h "api-clean-twitter/handlers"
 	m "api-clean-twitter/middleware"
 	"log"
+	"net/http"
 
 	"fmt"
-	"net/http"
 	"os"
 
 	"github.com/rs/cors"
@@ -59,8 +60,12 @@ func main() {
 		AllowedOrigins:   []string{"http://localhost:3000", "http://clean-your-tw.online"},
 		AllowCredentials: true,
 	})
+
+	go cron.CleanTweets()
+
 	fmt.Printf("🚀 Lancement de l'api sur le port %s\n", port)
 	handler := c.Handler(router)
+	c.Handler(router)
 
 	err = http.ListenAndServe("0.0.0.0:"+port, handler)
 

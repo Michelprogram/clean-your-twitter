@@ -42,7 +42,6 @@ func OpenConnection() error {
 
 // Add Database and collection to the client
 func Connect(c *Client) (*mongo.Client, error) {
-	//uri := "mongodb://user:password@localhost:27017"
 	uri := fmt.Sprintf("mongodb+srv://%s:%s@%s/?retryWrites=true&w=majority", c.Identifiant, c.Password, c.URL)
 	clientOptions := options.Client().ApplyURI(uri)
 	client, err := mongo.Connect(context.TODO(), clientOptions)

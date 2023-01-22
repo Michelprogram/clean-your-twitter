@@ -1,4 +1,4 @@
-import { Tweet } from "@/types/api";
+import { Tweet, TweetClean } from "@/types/api";
 import { User } from "@/types/store";
 
 let apiEndpoint =
@@ -48,7 +48,7 @@ export default class BackendApi {
     });
   };
 
-  static clean = async (tweetsID: Array<string>) => {
+  static clean = async (tweetsID: Array<string>): Promise<TweetClean> => {
     const url = apiEndpoint + "/backend/clean";
 
     const request = await fetch(url, {
