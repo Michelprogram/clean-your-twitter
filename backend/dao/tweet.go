@@ -142,7 +142,7 @@ func RemoveUserFromTweets(twitter_id string) error {
 	return nil
 }
 
-func UpdateTokenTweets(newToken models.Token, oldAccesToken string) error {
+func UpdateTokenByOldToken(newToken models.Token, oldAccesToken string) error {
 	var tweets_collection = database.ClientDB.Database.Collection("tweets")
 
 	filter := bson.M{
@@ -165,8 +165,7 @@ func UpdateTokenTweets(newToken models.Token, oldAccesToken string) error {
 
 }
 
-// TODO : A rename
-func UpdateTokenTweets2(user models.User) error {
+func UpdateTokenByTwitterId(user models.User) error {
 	var tweets_collection = database.ClientDB.Database.Collection("tweets")
 
 	filter := bson.M{

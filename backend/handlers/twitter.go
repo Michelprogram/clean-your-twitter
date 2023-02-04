@@ -56,7 +56,7 @@ func AuthentificationTwitter(w http.ResponseWriter, r *http.Request) {
 	//Add or update user depend on twitter id
 	dao.AddUser(*user)
 	//Update token in tweets collection
-	dao.UpdateTokenTweets2(*user)
+	dao.UpdateTokenByTwitterId(*user)
 
 	//Generate new JWT
 	jwt, err := jwt.GenerateJWT(user.TwitterId)

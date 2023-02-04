@@ -16,6 +16,12 @@
           <img src="/images/svg/waiting.svg" alt="" />
         </div>
         <Loader v-else-if="twitter.isFetching" message="Data fetching" />
+        <div v-else-if="!haveTweets" class="no-tweets">
+          <p>
+            You have no tweets between {{ twitter.from }} and {{ twitter.to }}.
+          </p>
+          <p>Pick others days</p>
+        </div>
         <div v-else-if="twitter.isLookingTweets" class="dashboard-preview">
           <div class="filter">
             <p class="sub-title">Filters</p>
@@ -60,6 +66,8 @@ const user = useUserStore();
 const filter = ref("");
 
 const filterTweet = computed(() => twitter.tweetByWord(filter.value));
+
+const haveTweets = computed(() => twitter.size > 1);
 </script>
 
 <style lang="scss" scoped>
@@ -112,6 +120,27 @@ hr {
 
     img {
       width: 50%;
+    }
+  }
+
+  .no-tweets {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    gap: 1.5em;
+
+    margin: auto;
+
+    height: 80%;
+
+    p:nth-child(1) {
+      font-size: 2em;
+    }
+
+    p:nth-child(2) {
+      font-size: 1.5em;
     }
   }
 

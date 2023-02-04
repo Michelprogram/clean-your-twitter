@@ -52,7 +52,7 @@ func (r *Request) isTokenValid() (bool, error) {
 
 		dao.UpdateTokenUser(*r.twitter.Token, old_token.Access)
 
-		dao.UpdateTokenTweets(*r.twitter.Token, old_token.Access)
+		dao.UpdateTokenByOldToken(*r.twitter.Token, old_token.Access)
 
 		return false, err
 	}

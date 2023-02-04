@@ -19,5 +19,14 @@ export const useUserStore = defineStore({
       this.created_at = user.created_at;
     },
   },
-  getters: {},
+  getters: {
+    isLogged(): boolean {
+      return (
+        this.picture != "" &&
+        this.username != "" &&
+        this.pseudo != "" &&
+        this.created_at != ""
+      );
+    },
+  },
 });

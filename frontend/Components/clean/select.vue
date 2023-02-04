@@ -14,7 +14,6 @@
       text="Find tweets"
       :action="() => findTweets"
       :fill="true"
-      :disable="!twitter.isWaiting"
       class="find-tweets"
     />
   </div>
@@ -54,7 +53,6 @@ const findTweets = computed(async () => {
     error.value = "You can't see in the futur";
     return;
   }
-
   twitter.getTweets(cookie, start, end);
 });
 

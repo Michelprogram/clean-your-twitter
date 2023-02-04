@@ -1,6 +1,6 @@
 <template>
   <div class="clean">
-    <p>{{ twitter.deleted }} tweets will be deleted on{{ twitter.size }}</p>
+    <p>{{ twitter.deleted }} tweets will be deleted on {{ twitter.size }}</p>
     <p>That represent : {{ pollution }} gram{{ plurals }} of CO2</p>
     <Button text="Clean" :action="() => clean" :fill="true" />
   </div>
@@ -12,8 +12,10 @@ import Button from "@/Components/utils/button.vue";
 
 const twitter = useTweetStore();
 
+const PRECISION = 3;
+
 const pollution = computed((): number => {
-  return twitter.tweets.length * 0.02;
+  return Number((twitter.tweets.length * 0.02).toFixed(PRECISION));
 });
 
 const plurals = computed((): string => {

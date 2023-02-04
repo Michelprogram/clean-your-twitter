@@ -2,20 +2,22 @@
   <div>
     <div class="header-container">
       <div class="img-container">
-        <img
-          src="/images/logo_header.png"
-          alt="clean your twitter logo"
-          class="icon-app"
-        />
+        <NuxtLink to="/">
+          <img
+            src="/images/logo_header.png"
+            alt="clean your twitter logo"
+            class="icon-app"
+          />
+        </NuxtLink>
       </div>
       <div class="menu">
         <NuxtLink to="/" class="cursor-text">Clean your twitter</NuxtLink>
-        <NuxtLink v-if="isConnected" to="/clean" class="cursor-text"
+        <NuxtLink v-if="user.isLogged" to="/clean" class="cursor-text"
           >Dashboard</NuxtLink
         >
         <NuxtLink to="about" class="cursor-text">About</NuxtLink>
       </div>
-      <div v-if="isConnected" class="connect">
+      <div v-if="user.isLogged" class="connect">
         <div class="images-container">
           <img
             class="picture-profile"
@@ -55,10 +57,6 @@ const logout = computed((): void => {
   cookie.value = "";
   const url = new URL("/", window.location.origin);
   window.location.href = url.toString();
-});
-
-const isConnected = computed((): boolean => {
-  return user.picture != "";
 });
 
 onMounted(async () => {
