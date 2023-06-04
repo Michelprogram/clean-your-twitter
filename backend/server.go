@@ -55,7 +55,7 @@ func main() {
 	test_routes.HandleFunc("/", h.TestCode).Methods("GET")
 	test_routes.HandleFunc("/ping", h.Test).Methods("GET")
 
-	//router.NotFoundHandler = handlers.ErrorRoute()
+	//router.NotFoundHandler = handlers.ErrorRoute() update
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:3000", "http://clean-your-tw.online"},
 		AllowCredentials: true,
