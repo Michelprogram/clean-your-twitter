@@ -10,9 +10,11 @@ export default class WebSocketB {
 
     const API_WEBSOCKET = runtimeConfig.public.API_WEBSOCKET;
 
+    //@ts-ignore
     if (cookie.value == null) return new WebSocket("");
 
     const options = new URLSearchParams({
+      //@ts-ignore
       "token-twitter": cookie.value,
       start: new Date(start).toISOString(),
       end: new Date(end).toISOString(),
