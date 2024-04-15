@@ -9,15 +9,15 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^0.1.2",
+    "@nuxt/devtools": "^0.1.6",
     "nuxt": "3.0.0",
-    "sass": "^1.56.2",
-    "sass-loader": "10"
+    "sass": "^1.75.0",
+    "sass-loader": "^10.5.2"
   },
   "dependencies": {
-    "@nuxtjs/dotenv": "^1.4.1",
-    "@pinia/nuxt": "^0.4.6",
-    "pinia": "^2.0.28",
+    "@nuxtjs/dotenv": "^1.4.2",
+    "@pinia/nuxt": "^0.4.11",
+    "pinia": "^2.1.7",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   }
