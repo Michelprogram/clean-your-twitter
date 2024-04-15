@@ -1,4 +1,4 @@
-import { CookieRef } from "nuxt/dist/app/composables";
+import type { CookieRef } from "#app";
 
 export default class WebSocketB {
   static tweets = (

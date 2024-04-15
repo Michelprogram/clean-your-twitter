@@ -1,4 +1,4 @@
-import { OAuthParameters } from "../types/api";
+import type { OAuthParameters } from "../types/api";
 
 export function generateTwitterOAuth(): string {
   const runtimeConfig = useRuntimeConfig();

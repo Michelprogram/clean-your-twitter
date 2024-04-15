@@ -1,5 +1,5 @@
-import { Tweet, TweetClean } from "@/types/api";
-import { User } from "@/types/store";
+import type { Tweet, TweetClean } from "@/types/api";
+import type { User } from "@/types/store";
 
 export default class BackendApi {
   static API_ENDPOINT = () => useRuntimeConfig().public.API_ENDPOINT;

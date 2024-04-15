@@ -1,5 +1,8 @@
 {
   "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -9,14 +12,14 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^0.1.6",
-    "nuxt": "3.0.0",
+    "@nuxt/devtools": "npm:@nuxt/devtools-edge@1.1.5-28543017.101d7de",
+    "nuxt": "3.11.2",
     "sass": "^1.75.0",
-    "sass-loader": "^10.5.2"
+    "sass-loader": "^14.2.0"
   },
   "dependencies": {
     "@nuxtjs/dotenv": "^1.4.2",
-    "@pinia/nuxt": "^0.4.11",
+    "@pinia/nuxt": "^0.5.1",
     "pinia": "^2.1.7",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
