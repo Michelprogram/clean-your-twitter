@@ -5,29 +5,35 @@ import (
 	"api-clean-twitter/database"
 	h "api-clean-twitter/handlers"
 	m "api-clean-twitter/middleware"
+	"flag"
 	"log"
 	"net/http"
 
 	"fmt"
-	"os"
 
 	"github.com/rs/cors"
 	"golang.org/x/net/websocket"
 
 	"github.com/gorilla/mux"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
 
 	var err error
 
+	var port string
+
+	flag.StringVar(&port, "port", "3021", "Port to listen on")
+
+	_ = godotenv.Load(".env")
+
 	err = database.OpenConnection()
 
 	if err != nil {
 		log.Fatalf("Connection to the database : %s", err)
 	}
-
-	var port string = os.Args[1]
 
 	router := mux.NewRouter()
 

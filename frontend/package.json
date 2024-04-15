@@ -9,6 +9,7 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@nuxt/devtools": "^0.1.2",
     "nuxt": "3.0.0",
     "sass": "^1.56.2",
     "sass-loader": "10"
@@ -16,6 +17,8 @@
   "dependencies": {
     "@nuxtjs/dotenv": "^1.4.1",
     "@pinia/nuxt": "^0.4.6",
-    "pinia": "^2.0.28"
+    "pinia": "^2.0.28",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0"
   }
 }

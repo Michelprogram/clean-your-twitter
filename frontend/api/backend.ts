@@ -1,14 +1,11 @@
 import { Tweet, TweetClean } from "@/types/api";
 import { User } from "@/types/store";
 
-let apiEndpoint =
-  process.env.NODE_ENV == "production"
-    ? "http://clean-your-tw.online:3021"
-    : "http://localhost:3021";
-
 export default class BackendApi {
+  static API_ENDPOINT = () => useRuntimeConfig().public.API_ENDPOINT;
+
   static infoUser = async (): Promise<User> => {
-    const url = apiEndpoint + "/backend/auth";
+    const url = this.API_ENDPOINT + "/backend/auth";
 
     const request = await fetch(url, {
       credentials: "include",
@@ -30,7 +27,7 @@ export default class BackendApi {
     dateStart: string,
     dateEnd: string
   ): Promise<Array<Tweet>> => {
-    const url = apiEndpoint + "/backend/tweets";
+    const url = this.API_ENDPOINT + "/backend/tweets";
 
     const [start, end] = [new Date(dateStart), new Date(dateEnd)];
 
@@ -49,7 +46,7 @@ export default class BackendApi {
   };
 
   static clean = async (tweetsID: Array<string>): Promise<TweetClean> => {
-    const url = apiEndpoint + "/backend/clean";
+    const url = this.API_ENDPOINT + "/backend/clean";
 
     const request = await fetch(url, {
       credentials: "include",

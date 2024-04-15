@@ -6,31 +6,15 @@ import (
 	"testing"
 )
 
-var ctx = context.TODO()
-
-var client *database.Client
-
-var err error
-
-func TestClient(t *testing.T) {
-
-	client, err = database.SetClient()
-
-	if err != nil {
-		t.Errorf("Error during SetClient : got %s want %s\n", err, "nil")
-	}
-
-}
-
 func TestConnection(t *testing.T) {
 
-	mongo_client, err := database.Connect(client)
+	mongo_client, err := database.Connect()
 
 	if err != nil {
 		t.Errorf("Error during Connect : got %s want %s\n", err, "nil")
 	}
 
-	err = mongo_client.Ping(ctx, nil)
+	err = mongo_client.Database.Client().Ping(context.TODO(), nil)
 
 	if err != nil {
 		t.Errorf("Error during Ping : got %s want %s\n", err, "nil")

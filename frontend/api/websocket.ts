@@ -1,16 +1,15 @@
 import { CookieRef } from "nuxt/dist/app/composables";
 
-let socketEndpoint =
-  process.env.NODE_ENV == "production"
-    ? "ws://clean-your-tw.online:3021/ws/tweets"
-    : "ws://localhost:3021/ws/tweets";
-
 export default class WebSocketB {
   static tweets = (
     cookie: CookieRef<string>,
     start: string,
     end: string
   ): WebSocket => {
+    const runtimeConfig = useRuntimeConfig();
+
+    const API_WEBSOCKET = runtimeConfig.public.API_WEBSOCKET;
+
     if (cookie.value == null) return new WebSocket("");
 
     const options = new URLSearchParams({
@@ -19,7 +18,7 @@ export default class WebSocketB {
       end: new Date(end).toISOString(),
     }).toString();
 
-    const url = `${socketEndpoint}?${options}`;
+    const url = `${API_WEBSOCKET}?${options}`;
     const socket = new WebSocket(url);
 
     return socket;
