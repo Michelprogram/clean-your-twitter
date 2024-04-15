@@ -15,9 +15,9 @@
 </template>
 
 <script setup lang="ts">
-import Clean from "@/Components/clean/clean.vue";
-import Select from "@/Components/clean/select.vue";
-import Preview from "@/Components/clean/preview.vue";
+import Clean from "@/components/clean/clean.vue";
+import Select from "@/components/clean/select.vue";
+import Preview from "@/components/clean/preview.vue";
 </script>
 
 <style lang="scss" scoped>

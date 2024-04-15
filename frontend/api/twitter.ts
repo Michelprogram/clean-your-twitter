@@ -4,7 +4,7 @@ export function generateTwitterOAuth(): string {
   const runtimeConfig = useRuntimeConfig();
 
   const [REDIRECT_URI, CLIENT_ID, TWITTER_CODE_CHALLENGE] = [
-    runtimeConfig.public.API_ENDPOINT,
+    runtimeConfig.public.API_REDIRECT_URL,
     runtimeConfig.public.TWITTER_CLIENT_ID,
     runtimeConfig.public.TWITTER_CODE_CHALLENGE,
   ];

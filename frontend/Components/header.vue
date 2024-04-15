@@ -12,9 +12,7 @@
       </div>
       <div class="menu">
         <NuxtLink to="/" class="cursor-text">Clean your twitter</NuxtLink>
-        <NuxtLink v-if="user.isLogged" to="/clean" class="cursor-text"
-          >Dashboard</NuxtLink
-        >
+        <NuxtLink to="/clean" class="cursor-text">Dashboard</NuxtLink>
         <NuxtLink to="about" class="cursor-text">About</NuxtLink>
       </div>
       <div v-if="user.isLogged" class="connect">
@@ -40,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import Button from "@/Components/utils/button.vue";
+import Button from "@/components/utils/button.vue";
 import { generateTwitterOAuth } from "@/api/twitter";
 import BackendApi from "@/api/backend";
 import { useUserStore } from "@/store/user";

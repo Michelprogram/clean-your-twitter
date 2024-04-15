@@ -1,6 +1,6 @@
+import type { CookieRef } from "#app";
 import BackendApi from "@/api/backend";
-import { Tweet } from "@/types/api";
-import { CookieRef } from "nuxt/dist/app/composables";
+import type { Tweet } from "@/types/api";
 import { defineStore } from "pinia";
 import WebSocketB from "~~/api/websocket";
 

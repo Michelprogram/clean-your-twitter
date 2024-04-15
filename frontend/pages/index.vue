@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import Button from "@/Components/utils/button.vue";
+import Button from "@/components/utils/button.vue";
 import { generateTwitterOAuth } from "@/api/twitter";
 import { useUserStore } from "@/store/user";
 

@@ -27,8 +27,8 @@
 </template>
 
 <script setup lang="ts">
-import { Tweet } from "@/types/api";
-import { User } from "@/types/store";
+import type { Tweet } from "@/types/api";
+import type { User } from "@/types/store";
 import Formatter from "@/utils/dates";
 
 interface TweetProps {

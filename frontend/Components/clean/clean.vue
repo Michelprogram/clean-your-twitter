@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { useTweetStore } from "@/store/tweets";
-import Button from "@/Components/utils/button.vue";
+import Button from "@/components/utils/button.vue";
 
 const twitter = useTweetStore();
 

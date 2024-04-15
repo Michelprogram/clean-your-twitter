@@ -5,7 +5,7 @@ const nuxtConfig = defineNuxtConfig({
   runtimeConfig: {
     public: {
       API_ENDPOINT: process.env.NUXT_API_ENDPOINT || "",
-      API_REDIRECT_URL: process.env.NUXT_API_REDIRECT_URL || "",
+      API_REDIRECT_URL: process.env.NUXT_API_REDIRECT_URI || "",
       API_WEBSOCKET: process.env.NUXT_API_WEBSOCKET || "",
       TWITTER_CLIENT_ID: process.env.NUXT_TWITTER_CLIENT_ID || "",
       TWITTER_CODE_CHALLENGE: process.env.NUXT_TWITTER_CODE_CHALLENGE || "",

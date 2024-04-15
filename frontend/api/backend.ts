@@ -5,7 +5,7 @@ export default class BackendApi {
   static API_ENDPOINT = () => useRuntimeConfig().public.API_ENDPOINT;
 
   static infoUser = async (): Promise<User> => {
-    const url = this.API_ENDPOINT + "/backend/auth";
+    const url = this.API_ENDPOINT() + "/backend/auth";
 
     const request = await fetch(url, {
       credentials: "include",

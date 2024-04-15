@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import Header from "@/Components/header.vue";
-import Footer from "@/Components/footer.vue";
-import Cursor from "@/Components/utils/cursor.vue";
+import Header from "@/components/header.vue";
+import Footer from "@/components/footer.vue";
+import Cursor from "@/components/utils/cursor.vue";
 </script>
